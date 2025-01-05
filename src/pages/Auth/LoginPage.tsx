@@ -95,6 +95,9 @@ export default function LoginPage() {
                   <Button type="submit" className="w-full">
                     Login
                   </Button>
+                  <Button type="submit" className="w-full">
+                    Forgot password
+                  </Button>
                 </form>
               </Form>
             </TabsContent>

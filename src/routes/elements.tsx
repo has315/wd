@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Suspense, lazy, ElementType } from 'react';
 // components
 // import LoadingScreen from '../components/loading-screen';

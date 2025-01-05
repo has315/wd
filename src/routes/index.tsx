@@ -35,7 +35,5 @@ export default function Router() {
         { element: <Navigate to="/dashboard" replace />, index: true }, 
       ],
     }
-
-
   ]);
 }

@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 
 export function useNotes() {
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: notes, isLoading } = useQuery<any[]>({
@@ -26,17 +26,10 @@ export function useNotes() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/notes"] });
-      toast({
-        title: "Success",
-        description: "Note uploaded successfully",
-      });
+      toast("Note uploaded successfully", { type: "success" });
     },
-    onError: (error: Error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+    onError: () => {
+      toast("Something went wrong", { type: "error" });
     },
   });
 

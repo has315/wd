@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
@@ -15,7 +16,7 @@ type RequestResult = {
 async function handleRequest(
     url: string,
     method: string,
-    body?: NewUser
+    body?: string
 ): Promise<RequestResult> {
     try {
         const response = await fetch(url, {

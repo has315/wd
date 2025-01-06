@@ -25,3 +25,8 @@ export const DashboardPage = Loadable(
 export const CoursesPage = Loadable(
   lazy(() => import('../pages/Courses/CoursesPage')),
 );
+
+
+export const ProfilePage = Loadable(
+  lazy(() => import('../pages/Profile/ProfilePage')),
+);

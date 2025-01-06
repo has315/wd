@@ -3,27 +3,29 @@ import { Link, Outlet } from "react-router-dom";
 import * as Popover from "@radix-ui/react-popover";
 import { MixerHorizontalIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
+import { PopoverPortal } from "@radix-ui/react-popover";
+import { PopoverContent } from "@/components/ui/popover";
+import { CircleUser } from "lucide-react";
 
 export default function MainLayout() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             Wisdom drop
             <Popover.Root>
               <Popover.Trigger asChild>
                 <button
-                  className="inline-flex size-[35px] cursor-default items-center justify-center rounded-full bg-white text-violet11 shadow-[0_2px_10px] shadow-blackA4 outline-none hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-black"
+                  className="inline-flex size-[35px] cursor-default items-center justify-center rounded-full bg-white text-violet11 outline-none hover:text-primaryLight"
                   aria-label="Update dimensions"
                 >
-                  <MixerHorizontalIcon />
+                  <CircleUser />
                 </button>
               </Popover.Trigger>
-              <Popover.Portal>
-                <Popover.Content
+              <PopoverPortal>
+                <PopoverContent
                   className="w-[260px] rounded bg-white p-5"
-                  sideOffset={5}
                 >
                   <div className="flex flex-col gap-2.5">
                     <div className="flex items-center justify-between">
@@ -31,21 +33,25 @@ export default function MainLayout() {
                         Profile settings
                       </p>
                       <Popover.Close
-                        className="cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
+                        className="cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 "
                         aria-label="Close"
                       >
                         <Cross2Icon />
                       </Popover.Close>
                     </div>
                     <div className="flex flex-col">
-                      <div className="flex items-center">Profile</div>
+                      <div className="flex items-center">
+                        <Link to="/profile/settings" className="">
+                          Profile
+                        </Link>
+                      </div>
                       <Button>Logout</Button>
                     </div>
                   </div>
 
                   <Popover.Arrow className="fill-white" />
-                </Popover.Content>
-              </Popover.Portal>
+                </PopoverContent>
+              </PopoverPortal>
             </Popover.Root>
           </div>
         </div>
@@ -67,7 +73,9 @@ export default function MainLayout() {
             <NavigationMenu.Viewport />
           </NavigationMenu.Root>
         </section>
-        <Outlet />
+        <div className="px-4 w-full">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

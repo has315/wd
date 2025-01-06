@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useUser } from "@/hooks/use-user";
 
-export default function DashboardPage() {
-  const { user, logout } = useUser();
+export default function ProfilePage() {
 
   return (
     <>
     Profile Page
+    
+    <p>Phone number</p>
+    <p>Email</p>
     </>
   );
 }

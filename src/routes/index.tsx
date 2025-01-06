@@ -6,7 +6,8 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import {
   LoginPage,
   DashboardPage,
-  CoursesPage
+  CoursesPage,
+  ProfilePage
 } from './elements';
 import MainLayout from '@/layouts/dashboard/MainLayout';
 
@@ -32,8 +33,15 @@ export default function Router() {
       children: [
         { path: 'dashboard', element: <DashboardPage /> },
         { path: 'courses', element: <CoursesPage /> },
-        { element: <Navigate to="/dashboard" replace />, index: true }, 
+        { element: <Navigate to="/dashboard" replace />, index: true },
       ],
+    },
+    {
+      path: 'profile',
+      element: <MainLayout />,
+      children: [
+        { path: 'settings', element: <ProfilePage /> }
+      ]
     }
   ]);
 }

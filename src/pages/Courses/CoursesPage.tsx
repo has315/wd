@@ -1,21 +1,64 @@
+import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
+import { AllCommunityModule, ColDef, ColGroupDef, ModuleRegistry, ValueGetterParams } from 'ag-grid-community';
+import { useState } from 'react';
 
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+ModuleRegistry.registerModules([AllCommunityModule]);
 
-import { useUser } from "@/hooks/use-user";
-// import DragDropUpload from "@/components/dashboard/DragDropUpload";
-// import NotesList from "@/components/dashboard/NotesList";
-// import CourseSettings from "@/components/dashboard/CourseSettings";
-
+const CustomButtonComponent = () => {
+  return <button onClick={() => window.alert("clicked")}>Push Me!</button>;
+};
 
 export default function CoursesPage() {
-  const { user, logout } = useUser();
-  const [activeTab, setActiveTab] = useState("notes");
+  const [rowData, setRowData] = useState<any[]>([
+    { id: "1", user_id: "1", title: "test topic 1", description: "test1", delivery: {channel: "slack", frequency: "daily" } },
+    { id: "2", user_id: "2", title: "test topic 2", description: "tes2t", delivery: {channel: "slack", frequency: "daily" } },
+    { id: "3", user_id: "1", title: "test topic 3", description: "test3", delivery: {channel: "slack", frequency: "daily" } },
+  ]);
+  const [columnDefs, setColumnDefs] = useState<
+    (ColDef<any, any> | ColGroupDef<any>)[]
+  >([
+    {
+      field: "id",
+      headerName: "ID",
+      flex: 1,
+    },
+    {
+      field: "user_id",
+      headerName: "User ID",
+      flex: 1,
+    },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 1,
+    },
+    {
+      field: "description",
+      headerName: "Description",
+      flex: 1,
+    },
+    {
+      field: "Delivery",
+      valueGetter: (p: ValueGetterParams) => p.data.delivery.channel ,
+      headerName: "description",
+      flex: 1,
+    },
+    {
+      field: "frequency",
+      valueGetter: (p: ValueGetterParams) => p.data.delivery.frequency ,
+      headerName: "Frequency",
+      flex: 1,
+    },
 
-
+    { field: "button", cellRenderer: CustomButtonComponent, flex: 1 },
+  ]);
   return (
-  <>
-  Courses
-  </>
+    <div style={{ width: "100%", height: "100%" }}>
+      <div style={{ width: "100%", height: "100%" }}>
+        <AgGridReact rowData={rowData} columnDefs={columnDefs} />
+      </div>
+    </div>
   );
-}
+};
+
+

@@ -107,7 +107,7 @@ export default function DashboardPage() {
 
   }, [])
 
-  
+
   const form = useForm<CourseFormValues>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -133,7 +133,7 @@ export default function DashboardPage() {
       //   open: true,
       //   message: "",
       // });
-      toast("Please select at least one note to analyze", {type: "error"})
+      toast("Please select at least one note to analyze", { type: "error" })
       return;
     }
 
@@ -147,7 +147,7 @@ export default function DashboardPage() {
       });
 
       // const analysis = await analyze(noteIds, processingStyle[0]);
-   
+
       setCourseStructure(analysis.topics);
       setUnusedNotes(analysis.unusedNoteIds || []);
       setTotalProcessed(analysis.totalNotesProcessed || 0);
@@ -188,7 +188,7 @@ export default function DashboardPage() {
     });
 
   };
-  
+
 
   return (
     <>
@@ -247,12 +247,118 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent className="TabsContent" value="tab2">
           <div className="mx-auto">
-            <h2 className="text-xl font-semibold mb-4">Your Notes</h2>
+            {/* <h2 className="text-xl font-semibold mb-4">Your Notes</h2>
             <p className="text-muted-foreground mb-4">
               Select a note to create a new course
             </p>
-            <NotesList />
+            <NotesList /> */}
+            <Card>
+              <CardContent className="pt-6">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="noteIds"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Step 1: Select Notes and Configure Analysis</FormLabel>
+                          <FormDescription>
+                            Choose the notes to include in this course and adjust the processing style
+                          </FormDescription>
+                          <ScrollArea className="h-[300px] rounded-md border p-4">
+                            <div className="space-y-4">
+                              {notes?.map((note) => (
+                                <label
+                                  key={note.id}
+                                  className="flex items-start space-x-3 space-y-0"
+                                >
+                                  <Checkbox
+                                    id={`note-${note.id}`}
+                                    checked={field.value?.includes(note.id)}
+                                    onCheckedChange={(checked) => {
+                                      const currentValue = field.value || [];
+                                      const newValue = checked
+                                        ? [...currentValue, note.id]
+                                        : currentValue.filter((id) => id !== note.id);
+                                      field.onChange(newValue);
+                                    }}
+                                  />
+                                  <div className="space-y-1">
+                                    <p className="font-medium leading-none">{note.title}</p>
+                                    <p className="text-sm text-muted-foreground">
+                                    </p>
+                                    <div className="flex flex-wrap gap-1 mt-1">
+                                      {/* {note.tags?.map((tag, index) => (
+                                  <Badge key={index} variant="secondary">
+                                    {tag}
+                                  </Badge>
+                                ))} */}
+                                    </div>
+                                  </div>
+                                </label>
+                              ))}
+                            </div>
+                          </ScrollArea>
+                          <FormMessage />
 
+                          <div className="mt-6 space-y-4">
+                            <h4 className="font-medium">Processing Style</h4>
+                            <div className="space-y-2">
+                              <Slider
+                                value={processingStyle}
+                                onValueChange={setProcessingStyle}
+                                defaultValue={[1]}
+                                min={1}
+                                max={3}
+                                step={1}
+                              />
+                              <p className="text-sm text-muted-foreground">
+                                {processingStyle[0] === 1 ? "High granularity - most notes become individual lessons" :
+                                  processingStyle[0] === 2 ? "Balanced - mix of synthesis and individual notes" :
+                                    "High synthesis - condensed learning points"}
+                              </p>
+                            </div>
+                          </div>
+
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={handleAnalyze}
+                            disabled={isAnalyzing}
+                            className="mt-4 w-full"
+                          >
+                            {isAnalyzing ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Analyzing Notes...
+                              </>
+                            ) : (
+                              <>
+                                <BookOpen className="mr-2 h-4 w-4" />
+                                {courseStructure.length === 0
+                                  ? "Step 2: Analyze Selected Notes"
+                                  : "Re-analyze Notes"}
+                              </>
+                            )}
+                          </Button>
+                        </FormItem>
+                      )}
+                    />
+
+                    {courseStructure.length > 0 ? (
+                      <></>
+                    ) : (
+                      <div className="text-center p-8 text-muted-foreground">
+                        <BookOpen className="mx-auto h-12 w-12 mb-4" />
+                        <p>
+                          Select notes and click "Analyze Selected Notes" to generate course structure
+                        </p>
+                      </div>
+                    )}
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
             <div className="flex justify-between mt-2">
               <Button onClick={() => setTab("tab1")}>
                 <ChevronLeft className="ml-2 h-4 w-4" />
@@ -264,12 +370,12 @@ export default function DashboardPage() {
               </Button>
             </div>
           </div>
+
         </TabsContent>
         <TabsContent className="TabsContent" value="tab3">
 
           <div>
-          <>
-      {/* <AlertDialog open={errorDialog.open} onOpenChange={(open) => setErrorDialog({ open, message: errorDialog.message })}>
+            {/* <AlertDialog open={errorDialog.open} onOpenChange={(open) => setErrorDialog({ open, message: errorDialog.message })}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Error</AlertDialogTitle>
@@ -282,339 +388,230 @@ export default function DashboardPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog> */}
-      <Card>
-        <CardContent className="pt-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="noteIds"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Step 1: Select Notes and Configure Analysis</FormLabel>
-                    <FormDescription>
-                      Choose the notes to include in this course and adjust the processing style
-                    </FormDescription>
-                    <ScrollArea className="h-[300px] rounded-md border p-4">
-                      <div className="space-y-4">
-                        {notes?.map((note) => (
-                          <label
-                            key={note.id}
-                            className="flex items-start space-x-3 space-y-0"
-                          >
-                            <Checkbox
-                              id={`note-${note.id}`}
-                              checked={field.value?.includes(note.id)}
-                              onCheckedChange={(checked) => {
-                                const currentValue = field.value || [];
-                                const newValue = checked
-                                  ? [...currentValue, note.id]
-                                  : currentValue.filter((id) => id !== note.id);
-                                field.onChange(newValue);
-                              }}
-                            />
-                            <div className="space-y-1">
-                              <p className="font-medium leading-none">{note.title}</p>
-                              <p className="text-sm text-muted-foreground">
-                              </p>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {/* {note.tags?.map((tag, index) => (
-                                  <Badge key={index} variant="secondary">
-                                    {tag}
-                                  </Badge>
-                                ))} */}
-                              </div>
-                            </div>
-                          </label>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                    <FormMessage />
+            <Form {...form}>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-lg">Configure Course Structure</h3>
+                  <div className="text-sm text-muted-foreground">
+                    <p>
+                      {courseStructure.reduce((acc, topic) =>
+                        acc + topic.sections.filter((s) => s.selected).length, 0
+                      )}{" "}
+                      lessons selected
+                    </p>
+                    <p>Processed {totalProcessed} notes total</p>
+                  </div>
+                </div>
 
-                    <div className="mt-6 space-y-4">
-                      <h4 className="font-medium">Processing Style</h4>
-                      <div className="space-y-2">
-                        <Slider
-                          value={processingStyle}
-                          onValueChange={setProcessingStyle}
-                          defaultValue={[1]}
-                          min={1}
-                          max={3}
-                          step={1}
-                        />
-                        <p className="text-sm text-muted-foreground">
-                          {processingStyle[0] === 1 ? "High granularity - most notes become individual lessons" :
-                            processingStyle[0] === 2 ? "Balanced - mix of synthesis and individual notes" :
-                              "High synthesis - condensed learning points"}
-                        </p>
+                <Accordion type="single" collapsible>
+                  {courseStructure.map((topic, topicIndex) => (
+                    <div key={topicIndex} className="border rounded-lg mb-4">
+                      <div className="p-4">
+                        <h4 className="font-semibold text-lg mb-2">
+                          {topic.title}
+                          {topic.relatedNoteIds?.length > 0 && (
+                            <span className="text-sm font-normal text-muted-foreground ml-2">
+                              ({topic.relatedNoteIds.length} related notes)
+                            </span>
+                          )}
+                        </h4>
+                        <div className="space-y-2">
+                          {topic.sections.map((section, sectionIndex) => (
+                            <AccordionItem
+                              key={`${topicIndex}-${sectionIndex}`}
+                              value={`${topicIndex}-${sectionIndex}`}
+                              className="border-none"
+                            >
+                              <div className="flex items-start space-x-2">
+                                <Checkbox
+                                  checked={section.selected}
+                                  onCheckedChange={() =>
+                                    toggleSection(topicIndex, sectionIndex)
+                                  }
+                                  className="mt-1"
+                                />
+                                <div className="space-y-1">
+                                  <span className="text-sm text-muted-foreground">
+                                    {section.noteIds.length} source notes
+                                  </span>
+                                </div>
+                                <div className="flex-1">
+                                  <AccordionTrigger className="hover:no-underline py-0">
+                                    <div className="flex items-center justify-between w-full">
+                                      <span className="font-medium">
+                                        {section.number}. {section.title}
+                                      </span>
+
+                                    </div>
+                                  </AccordionTrigger>
+                                  <AccordionContent className="pt-2">
+                                    <div className="space-y-4">
+                                      <div>
+                                        <h5 className="font-medium mb-1">Learning Content</h5>
+                                        <p className="text-sm text-muted-foreground">
+                                          {section.learningContent}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <h5 className="font-medium mb-1">Story/Parable</h5>
+                                        <p className="text-sm text-muted-foreground">
+                                          {section.story}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <h5 className="font-medium mb-1">Reflection Question</h5>
+                                        <p className="text-sm text-muted-foreground">
+                                          {section.reflectionQuestion}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </AccordionContent>
+                                </div>
+                              </div>
+                            </AccordionItem>
+                          ))}
+                        </div>
                       </div>
                     </div>
+                  ))}
+                </Accordion>
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleAnalyze}
-                      disabled={isAnalyzing}
-                      className="mt-4 w-full"
-                    >
-                      {isAnalyzing ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Analyzing Notes...
-                        </>
-                      ) : (
-                        <>
-                          <BookOpen className="mr-2 h-4 w-4" />
-                          {courseStructure.length === 0
-                            ? "Step 2: Analyze Selected Notes"
-                            : "Re-analyze Notes"}
-                        </>
-                      )}
-                    </Button>
+                {unusedNotes.length > 0 && (
+                  <div className="mt-4 p-4 border rounded-lg bg-muted">
+                    <p className="text-sm text-muted-foreground">
+                      {unusedNotes.length} notes were not directly included in the lessons but are
+                      available for future expansion.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter course title" />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {courseStructure.length > 0 ? (
-                <>
-                  <div className="space-y-4">
-                    <FormLabel>Step 3: Review and Customize Course Structure</FormLabel>
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-lg">Course Structure</h3>
-                      <div className="text-sm text-muted-foreground">
-                        <p>
-                          {courseStructure.reduce((acc, topic) =>
-                            acc + topic.sections.filter((s) => s.selected).length, 0
-                          )}{" "}
-                          lessons selected
-                        </p>
-                        <p>Processed {totalProcessed} notes total</p>
-                      </div>
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} placeholder="Course overview" className="min-h-[100px]" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="delivery.channel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Delivery Channel</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select channel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="slack">Slack</SelectItem>
+                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="delivery.frequency"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Delivery Frequency</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select frequency" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="daily">Daily</SelectItem>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                          <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        How often you want to receive your wisdom drops
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="active"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Activate Course
+                      </FormLabel>
+                      <FormDescription>
+                        When active, this course will start delivering wisdom drops based on your
+                        schedule
+                      </FormDescription>
                     </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-                    <Accordion type="single" collapsible>
-                      {courseStructure.map((topic, topicIndex) => (
-                        <div key={topicIndex} className="border rounded-lg mb-4">
-                          <div className="p-4">
-                            <h4 className="font-semibold text-lg mb-2">
-                              {topic.title}
-                              {topic.relatedNoteIds?.length > 0 && (
-                                <span className="text-sm font-normal text-muted-foreground ml-2">
-                                  ({topic.relatedNoteIds.length} related notes)
-                                </span>
-                              )}
-                            </h4>
-                            <div className="space-y-2">
-                              {topic.sections.map((section, sectionIndex) => (
-                                <AccordionItem
-                                  key={`${topicIndex}-${sectionIndex}`}
-                                  value={`${topicIndex}-${sectionIndex}`}
-                                  className="border-none"
-                                >
-                                  <div className="flex items-start space-x-2">
-                                    <Checkbox
-                                      checked={section.selected}
-                                      onCheckedChange={() =>
-                                        toggleSection(topicIndex, sectionIndex)
-                                      }
-                                      className="mt-1"
-                                    />
-                                    <div className="space-y-1">
-                                      <span className="text-sm text-muted-foreground">
-                                        {section.noteIds.length} source notes
-                                      </span>
-                                    </div>
-                                    <div className="flex-1">
-                                      <AccordionTrigger className="hover:no-underline py-0">
-                                        <div className="flex items-center justify-between w-full">
-                                          <span className="font-medium">
-                                            {section.number}. {section.title}
-                                          </span>
-
-                                        </div>
-                                      </AccordionTrigger>
-                                      <AccordionContent className="pt-2">
-                                        <div className="space-y-4">
-                                          <div>
-                                            <h5 className="font-medium mb-1">Learning Content</h5>
-                                            <p className="text-sm text-muted-foreground">
-                                              {section.learningContent}
-                                            </p>
-                                          </div>
-                                          <div>
-                                            <h5 className="font-medium mb-1">Story/Parable</h5>
-                                            <p className="text-sm text-muted-foreground">
-                                              {section.story}
-                                            </p>
-                                          </div>
-                                          <div>
-                                            <h5 className="font-medium mb-1">Reflection Question</h5>
-                                            <p className="text-sm text-muted-foreground">
-                                              {section.reflectionQuestion}
-                                            </p>
-                                          </div>
-                                        </div>
-                                      </AccordionContent>
-                                    </div>
-                                  </div>
-                                </AccordionItem>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </Accordion>
-
-                    {unusedNotes.length > 0 && (
-                      <div className="mt-4 p-4 border rounded-lg bg-muted">
-                        <p className="text-sm text-muted-foreground">
-                          {unusedNotes.length} notes were not directly included in the lessons but are
-                          available for future expansion.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Step 4: Configure Course Details</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="Enter course title" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl>
-                          <Textarea {...field} placeholder="Course overview" className="min-h-[100px]" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="delivery.channel"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Delivery Channel</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select channel" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="email">Email</SelectItem>
-                              <SelectItem value="slack">Slack</SelectItem>
-                              <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="delivery.frequency"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Delivery Frequency</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select frequency" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="daily">Daily</SelectItem>
-                              <SelectItem value="weekly">Weekly</SelectItem>
-                              <SelectItem value="biweekly">Bi-weekly</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormDescription>
-                            How often you want to receive your wisdom drops
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="active"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                        <div className="space-y-0.5">
-                          <FormLabel className="text-base">
-                            Activate Course
-                          </FormLabel>
-                          <FormDescription>
-                            When active, this course will start delivering wisdom drops based on your
-                            schedule
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button
-                    type="submit"
-                    className="w-full"
-                  >
-                    {false ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating Course...
-                      </>
-                    ) : (
-                      <>
-                        <BookOpen className="mr-2 h-4 w-4" />
-                        Step 5: Create Course
-                      </>
-                    )}
-                  </Button>
-                </>
-              ) : (
-                <div className="text-center p-8 text-muted-foreground">
-                  <BookOpen className="mx-auto h-12 w-12 mb-4" />
-                  <p>
-                    Select notes and click "Analyze Selected Notes" to generate course structure
-                  </p>
-                </div>
-              )}
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </>
-
+              <Button
+                type="submit"
+                className="w-full"
+              >
+                {false ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating Course...
+                  </>
+                ) : (
+                  <>
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    Step 5: Create Course
+                  </>
+                )}
+              </Button>
+            </Form>
           </div>
           <div className="flex justify-start mt-2">
             <Button onClick={() => setTab("tab2")}>

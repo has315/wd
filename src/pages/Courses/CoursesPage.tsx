@@ -38,9 +38,9 @@ export default function CoursesPage() {
       flex: 1,
     },
     {
-      field: "Delivery",
+      field: "delivery",
       valueGetter: (p: ValueGetterParams) => p.data.delivery.channel ,
-      headerName: "description",
+      headerName: "Delivery method",
       flex: 1,
     },
     {

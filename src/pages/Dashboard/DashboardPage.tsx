@@ -28,6 +28,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { Switch } from "@/components/ui/switch";
 
+
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import BulletList from '@tiptap/extension-bullet-list';
+import { TextEditor } from "@/components/textEditor/TextEditor";
+
 interface CourseSection {
   number: string;
   title: string;
@@ -93,6 +99,7 @@ export default function DashboardPage() {
   const [unusedNotes, setUnusedNotes] = useState<number[]>([]);
   const [totalProcessed, setTotalProcessed] = useState(0);
 
+
   const { notes, note } = useSelector(state => state.note)
   const dispatch = useDispatch();
 
@@ -121,6 +128,9 @@ export default function DashboardPage() {
       active: true,
     },
   });
+
+
+
 
   const onSubmit = (data: any) => {
     console.log('yay', data)
@@ -189,6 +199,11 @@ export default function DashboardPage() {
 
   };
 
+  useEffect(() => {
+    if(note){
+      form.setValue("noteIds", [1])
+    }
+  }, [note])
 
   return (
     <>
@@ -235,14 +250,14 @@ export default function DashboardPage() {
             <h2 className="text-2xl font-semibold mb-2">
               Create New Wisdom Drop
             </h2>
-            <DragDropUpload />
+            <DragDropUpload setTab={setTab}/>
 
-            <div className="flex justify-end mt-2">
+            {/* <div className="flex justify-end mt-2">
               <Button onClick={() => setTab("tab2")} >
                 Next Step
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
-            </div>
+            </div> */}
           </div>
         </TabsContent>
         <TabsContent className="TabsContent" value="tab2">
@@ -261,42 +276,13 @@ export default function DashboardPage() {
                       name="noteIds"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Step 1: Select Notes and Configure Analysis</FormLabel>
+                          <FormLabel>Configure Analysis</FormLabel>
                           <FormDescription>
-                            Choose the notes to include in this course and adjust the processing style
+                             Configure content and the processing style
                           </FormDescription>
                           <ScrollArea className="h-[300px] rounded-md border p-4">
                             <div className="space-y-4">
-                              {notes?.map((note) => (
-                                <label
-                                  key={note.id}
-                                  className="flex items-start space-x-3 space-y-0"
-                                >
-                                  <Checkbox
-                                    id={`note-${note.id}`}
-                                    checked={field.value?.includes(note.id)}
-                                    onCheckedChange={(checked) => {
-                                      const currentValue = field.value || [];
-                                      const newValue = checked
-                                        ? [...currentValue, note.id]
-                                        : currentValue.filter((id) => id !== note.id);
-                                      field.onChange(newValue);
-                                    }}
-                                  />
-                                  <div className="space-y-1">
-                                    <p className="font-medium leading-none">{note.title}</p>
-                                    <p className="text-sm text-muted-foreground">
-                                    </p>
-                                    <div className="flex flex-wrap gap-1 mt-1">
-                                      {/* {note.tags?.map((tag, index) => (
-                                  <Badge key={index} variant="secondary">
-                                    {tag}
-                                  </Badge>
-                                ))} */}
-                                    </div>
-                                  </div>
-                                </label>
-                              ))}
+                              <TextEditor note={note}/>
                             </div>
                           </ScrollArea>
                           <FormMessage />
@@ -336,7 +322,7 @@ export default function DashboardPage() {
                               <>
                                 <BookOpen className="mr-2 h-4 w-4" />
                                 {courseStructure.length === 0
-                                  ? "Step 2: Analyze Selected Notes"
+                                  ? "Analyze Selected Note"
                                   : "Re-analyze Notes"}
                               </>
                             )}
@@ -351,7 +337,7 @@ export default function DashboardPage() {
                       <div className="text-center p-8 text-muted-foreground">
                         <BookOpen className="mx-auto h-12 w-12 mb-4" />
                         <p>
-                          Select notes and click "Analyze Selected Notes" to generate course structure
+                         click "Analyze Selected Notes" to generate course structure
                         </p>
                       </div>
                     )}

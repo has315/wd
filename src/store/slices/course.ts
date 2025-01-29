@@ -1,32 +1,24 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
 import axios from '@/lib/axios';
+import { Course, Topic } from '@/types/Course';
 
 // ----------------------------------------------------------------------
 
-const MOCK_COURSES = [
-  {
-    id: 1,
-    user_id: 1,
-    title: "test topic course",
-    description: "test",
-    delivery: { channel: "slack", frequency: "daily" },
-    active: "y",
-  },
-  {
-    id: 2,
-    user_id: 2,
-    title: "test2 topic course",
-    description: "test2",
-    delivery: { channel: "slack", frequency: "daily" },
-    active: "n",
-  },
-];
+type CourseState = {
+  isLoading: boolean;
+  error: any;
+  course: Course | null;
+  selectedCourse: Course | null;
+  topics: Topic[]
+  courses: Course[]
+}
 
-const initialState = {
+const initialState: CourseState = {
   isLoading: false,
   error: null,
   course: null,
+  selectedCourse: null,
   courses: [],
 };
 
@@ -51,9 +43,20 @@ const slice = createSlice({
 
     setSelectedCourse(state, action) {
       state.isLoading = false;
+      state.selectedCourse = action.payload;
+    },
+
+    setCourse(state, action) {
+      state.isLoading = false;
       state.course = action.payload;
     },
 
+
+
+    addCourse(state, action) {
+      state.isLoading = false
+      state.courses.push(action.payload)
+    }
   },
 });
 
@@ -69,12 +72,46 @@ export function getCourses() {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const response = await axios.get(`/api/course`);
-      const response = { data: MOCK_COURSES }
+      const response = await axios.get(`/api/courses`);
       dispatch(
-        slice.actions.getCoursesSuccess({
-          courses: response.data,
-        }),
+        slice.actions.getCoursesSuccess(
+          response.data
+        ),
+      );
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.log(error)
+    }
+  };
+}
+
+export function analzyeCourse({ notes, processingStyle }: { notes: any, processingStyle: number }) {
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`/api/courses/analyze`, { notes, processingStyle });
+      dispatch(
+        slice.actions.setCourse(
+          { topics: response.data }
+        ),
+      );
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function createCourse({ course }: { course: any }) {
+  console.log({ course })
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`/api/courses/`, { course });
+      dispatch(
+        slice.actions.getCoursesSuccess(
+          response.data
+        ),
       );
       return response;
     } catch (error) {

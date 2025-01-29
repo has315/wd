@@ -3,16 +3,16 @@ import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: 'localhost:3000' }); //prod
+const axiosInstance = axios.create({ baseURL: 'http://localhost:3000' }); //prod
 
-axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
+// axiosInstance.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
 
-        return Promise.reject(
-            (error.response && error.response.data) || 'Something went wrong',
-        );
-    },
-);
+//         return Promise.reject(
+//             (error.response && error.response.data) || 'Something went wrong',
+//         );
+//     },
+// );
 
 export default axiosInstance;

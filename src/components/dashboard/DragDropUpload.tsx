@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // import { useNotes } from "@/hooks/use-notes";
 import { Button } from "@/components/ui/button";
-import { dispatch } from "@/store/store";
-import { setSelectedNote } from "@/store/slices/note";
+import { setSelectedNote, uploadNote } from "@/store/slices/note";
+import { useDispatch } from "@/store/store";
 
 const ACCEPTED_FILE_TYPES = {
   'application/pdf': ['.pdf'],
@@ -15,11 +15,11 @@ const ACCEPTED_FILE_TYPES = {
   'text/csv': ['.csv']
 };
 
-export default function DragDropUpload({setTab}: {setTab: any}) {
+export default function DragDropUpload({ setTab }: { setTab: any }) {
   // const { upload } = useNotes();
+  const dispatch = useDispatch()
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 1) {
       setError("Please upload only one file at a time");
@@ -36,12 +36,8 @@ export default function DragDropUpload({setTab}: {setTab: any}) {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("title", file.name);
-
-      const result = {content: `1,DD37Cf93aecA6Dc,Sheryl,Baxter,Rasmussen Group,East Leonard,Chile,229.077.5154,397.884.0519x718,zunigavanessa@smith.info,2020-08-24,http://www.stephenson.com/n
-      // 1,DD37Cf93aecA6Dc,Sheryl,Baxter,Rasmussen Group,East Leonard,Chile,229.077.5154,397.884.0519x718,zunigavanessa@smith.info,2020-08-24,http://www.stephenson.com/
-      /n/ 1,DD37Cf93aecA6Dc,Sheryl,Baxter,Rasmussen Group,East Leonard,Chile,229.077.5154,397.884.0519x718,zunigavanessa@smith.info,2020-08-24,http://www.stephenson.com/`}
-      // const result = await upload(formData);
-      if(result) {
+      const result = await dispatch(uploadNote({ note: formData }));
+      if (result) {
         dispatch(setSelectedNote(result))
         setTab('tab2')
       }

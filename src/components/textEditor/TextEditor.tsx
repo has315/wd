@@ -35,7 +35,7 @@ export const TextEditor = ({ note }: { note: INote | null }) => {
 
     useEffect(() => {
         if (note && editor) {
-            const bulletPoints = note.content
+            const bulletPoints = note?.content
                 .split('\n')
                 .filter(line => line.trim())
                 .map(line => `<li>${line.trim().replace(/^[-•]\s*/, '')}</li>`)

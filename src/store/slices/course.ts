@@ -72,7 +72,7 @@ export function getCourses() {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/courses`);
+      const response = await axios.get(`/api/courses`, {withCredentials: true});
       dispatch(
         slice.actions.getCoursesSuccess(
           response.data
@@ -90,7 +90,7 @@ export function analzyeCourse({ notes, processingStyle }: { notes: any, processi
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/api/courses/analyze`, { notes, processingStyle });
+      const response = await axios.post(`/api/courses/analyze`, { notes, processingStyle }, {withCredentials: true});
       dispatch(
         slice.actions.setCourse(
           { topics: response.data }
@@ -107,7 +107,7 @@ export function createCourse({ course }: { course: any }) {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/api/courses/`, { course });
+      const response = await axios.post(`/api/courses/`, { course }, {withCredentials: true});
       dispatch(
         slice.actions.getCoursesSuccess(
           response.data

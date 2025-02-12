@@ -254,10 +254,10 @@ export default function DashboardPage() {
                       type="button"
                       variant="outline"
                       onClick={handleAnalyze}
-                      disabled={isLoading}
+                      disabled={courseLoading}
                       className="mt-4 w-full"
                     >
-                      {isLoading ? (
+                      {courseLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Analyzing Notes...
@@ -312,83 +312,86 @@ export default function DashboardPage() {
                   </div>
 
                   <Accordion type="single" collapsible>
-                    <FormField
-                      control={form.control}
-                      name="topics"
-                      render={({ field }) =>
-                        <>
-                          {course?.topics?.map((topic, topicIndex) => (
-                            <div key={topicIndex} className="border rounded-lg mb-4">
-                              <div className="p-4">
-                                <h4 className="flex items-center gap-2 font-semibold text-lg mb-2">
-                                  <span className="font-medium">
-                                    {topicIndex + 1}.
-                                  </span>
-                                  {topic.title}
-                                </h4>
-                                <div className="space-y-2">
-                                  {topic.lessons?.map((section, sectionIndex) => (
-                                    <AccordionItem
-                                      key={`${topicIndex}-${sectionIndex}`}
-                                      value={`${topicIndex}-${sectionIndex}`}
-                                      className="border-none"
-                                    >
-                                      <div className="flex items-start space-x-2">
-                                        <Checkbox
-                                          checked={true}
-                                          // onCheckedChange={() =>
-                                          //   toggleSection(topicIndex, sectionIndex)
-                                          // }
-                                          className="mt-1"
-                                        />
-                                        <div className="space-y-1">
-                                          {/* <span className="text-sm text-muted-foreground">
+                    <ScrollArea>
+
+                      <FormField
+                        control={form.control}
+                        name="topics"
+                        render={({ field }) =>
+                          <>
+                            {course?.topics?.map((topic, topicIndex) => (
+                              <div key={topicIndex} className="border rounded-lg mb-4">
+                                <div className="p-4">
+                                  <h4 className="flex items-center gap-2 font-semibold text-lg mb-2">
+                                    <span className="font-medium">
+                                      {topicIndex + 1}.
+                                    </span>
+                                    {topic.title}
+                                  </h4>
+                                  <div className="space-y-2">
+                                    {topic.lessons?.map((section, sectionIndex) => (
+                                      <AccordionItem
+                                        key={`${topicIndex}-${sectionIndex}`}
+                                        value={`${topicIndex}-${sectionIndex}`}
+                                        className="border-none"
+                                      >
+                                        <div className="flex items-start space-x-2">
+                                          <Checkbox
+                                            checked={true}
+                                            // onCheckedChange={() =>
+                                            //   toggleSection(topicIndex, sectionIndex)
+                                            // }
+                                            className="mt-1"
+                                          />
+                                          <div className="space-y-1">
+                                            {/* <span className="text-sm text-muted-foreground">
                                       {section.noteIds?.length} source notes
                                     </span> */}
-                                        </div>
-                                        <div className="flex-1">
-                                          <AccordionTrigger className="hover:no-underline py-0">
-                                            <div className="flex items-center justify-between w-full">
-                                              <span className="font-medium">
-                                                {sectionIndex + 1}. {section.title}
-                                              </span>
+                                          </div>
+                                          <div className="flex-1">
+                                            <AccordionTrigger className="hover:no-underline py-0">
+                                              <div className="flex items-center justify-between w-full">
+                                                <span className="font-medium">
+                                                  {sectionIndex + 1}. {section.title}
+                                                </span>
 
-                                            </div>
-                                          </AccordionTrigger>
-                                          <AccordionContent className="pt-2">
-                                            <div className="space-y-4">
-                                              <div>
-                                                <h5 className="font-medium mb-1">Learning Content</h5>
-                                                <p className="text-sm text-muted-foreground">
-                                                  {section.learningContent}
-                                                </p>
                                               </div>
-                                              <div>
-                                                <h5 className="font-medium mb-1">Story/Parable</h5>
-                                                <p className="text-sm text-muted-foreground">
-                                                  {section.story}
-                                                </p>
+                                            </AccordionTrigger>
+                                            <AccordionContent className="pt-2">
+                                              <div className="space-y-4">
+                                                <div>
+                                                  <h5 className="font-medium mb-1">Learning Content</h5>
+                                                  <p className="text-sm text-muted-foreground">
+                                                    {section.learningContent}
+                                                  </p>
+                                                </div>
+                                                <div>
+                                                  <h5 className="font-medium mb-1">Story/Parable</h5>
+                                                  <p className="text-sm text-muted-foreground">
+                                                    {section.story}
+                                                  </p>
+                                                </div>
+                                                <div>
+                                                  <h5 className="font-medium mb-1">Reflection Question</h5>
+                                                  <p className="text-sm text-muted-foreground">
+                                                    {section.reflectionQuestion}
+                                                  </p>
+                                                </div>
                                               </div>
-                                              <div>
-                                                <h5 className="font-medium mb-1">Reflection Question</h5>
-                                                <p className="text-sm text-muted-foreground">
-                                                  {section.reflectionQuestion}
-                                                </p>
-                                              </div>
-                                            </div>
-                                          </AccordionContent>
+                                            </AccordionContent>
+                                          </div>
                                         </div>
-                                      </div>
-                                    </AccordionItem>
-                                  ))}
+                                      </AccordionItem>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                        </>
+                            ))}
+                          </>
 
-                      }
-                    />
+                        }
+                      />
+                    </ScrollArea>
 
                   </Accordion>
 

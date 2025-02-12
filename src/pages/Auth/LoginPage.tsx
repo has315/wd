@@ -18,10 +18,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { useUser } from "@/hooks/use-user";
+import { login } from "@/store/slices/auth";
+import { dispatch } from "@/store/store";
 
 export default function LoginPage() {
-  const { login, register } = useUser();
   const [activeTab, setActiveTab] = useState("login");
 
   const loginForm = useForm({
@@ -39,12 +39,11 @@ export default function LoginPage() {
   });
 
   const onLogin = async ({ email, password }: { email: string, password: string }) => {
-    const result = await login({ email, password });
-   
+    const result = await dispatch(login({email, password}))
+    console.log(result)
   };
 
   const onRegister = async ({ email, password }: { email: string, password: string }) => {
-    const result = await login({ email, password });
    
   };
 

@@ -10,6 +10,8 @@ import {
   ProfilePage
 } from './elements';
 import MainLayout from '@/layouts/dashboard/MainLayout';
+import AuthGuard from '@/components/auth/AuthGuard';
+import GuestGuard from '@/components/auth/GuestGuard';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +23,9 @@ export default function Router() {
         {
           path: 'login',
           element: (
-            <LoginPage />
+            <GuestGuard>
+              <LoginPage />
+            </GuestGuard>
           ),
         },
 
@@ -29,7 +33,10 @@ export default function Router() {
     },
     {
       path: '/',
-      element: <MainLayout />,
+      element: <AuthGuard>
+        <MainLayout />
+      </AuthGuard>
+      ,
       children: [
         { path: 'dashboard', element: <DashboardPage /> },
         { path: 'courses', element: <CoursesPage /> },
@@ -38,7 +45,9 @@ export default function Router() {
     },
     {
       path: 'profile',
-      element: <MainLayout />,
+      element: <AuthGuard>
+        <MainLayout />
+      </AuthGuard>,
       children: [
         { path: 'settings', element: <ProfilePage /> }
       ]

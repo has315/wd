@@ -6,8 +6,15 @@ import { Button } from "@/components/ui/button";
 import { PopoverPortal } from "@radix-ui/react-popover";
 import { PopoverContent } from "@/components/ui/popover";
 import { CircleUser } from "lucide-react";
+import { useDispatch } from "@/store/store";
+import { logout } from "@/store/slices/auth";
 
 export default function MainLayout() {
+  const dispatch = useDispatch();
+
+
+
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b">
@@ -45,7 +52,7 @@ export default function MainLayout() {
                           Profile
                         </Link>
                       </div>
-                      <Button>Logout</Button>
+                      <Button onClick={() => dispatch(logout())}>Logout</Button>
                     </div>
                   </div>
 

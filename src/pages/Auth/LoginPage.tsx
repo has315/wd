@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { login } from "@/store/slices/auth";
+import { login, register } from "@/store/slices/auth";
 import { dispatch } from "@/store/store";
 
 export default function LoginPage() {
@@ -44,7 +44,8 @@ export default function LoginPage() {
   };
 
   const onRegister = async ({ email, password }: { email: string, password: string }) => {
-   
+    const result = await dispatch(register({email, password}))
+    console.log(result)
   };
 
   return (

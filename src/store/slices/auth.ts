@@ -35,6 +35,9 @@ const slice = createSlice({
       state.user = action.payload
       state.isAuthenticated = true
     },
+    registerSuccess(state) {
+      state.isLoading = false
+    },
     logoutSuccess(state) {
       state.isLoading = false
       state.user = null
@@ -62,7 +65,7 @@ export function login({ email, password }: { email: string, password: string }) 
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/auth/login`, { email, password }, {withCredentials: true});
+      const response = await axios.post(`/auth/login`, { email, password });
       if (response.status !== 200) return false
 
       // setSession(response.data.token)
@@ -89,9 +92,9 @@ export function register({ email, password }: { email: string, password: string 
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/auth/register`, { email, password }, { withCredentials: true });
+      const response = await axios.post(`/auth/register`, { email, password });
       if (response.status !== 200) return false
-
+      dispatch(slice.actions.registerSuccess())
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

@@ -4,13 +4,12 @@ import { getAccessToken } from './auth/utils';
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: 'http://localhost:3000' }); //prod
+const axiosInstance = axios.create({ baseURL: import.meta.env.VITE_API_URL }); //prod
 
     // Add request interceptor
     axiosInstance.interceptors.request.use(
         (config) => {
           const accessToken = getAccessToken();
-          console.log({accessToken})
           if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
           }

@@ -28,12 +28,12 @@ import { Switch } from "@/components/ui/switch";
 import { TextEditor } from "@/components/textEditor/TextEditor";
 import { analzyeCourse, createCourse } from "@/store/slices/course";
 import { title } from "process";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 
 
 
 const lessonSchema = z.object({
-  id: z.string(),
   title: z.string(),
   learningContent: z.string(),
   story: z.string(),
@@ -106,10 +106,10 @@ export default function DashboardPage() {
 
 
 
-  const onSubmit = (data: any) => {
-    console.log({ data })
-    dispatch(createCourse({ course: data }))
-    if (!isLoading) {
+  const onSubmit = async (data: any) => {
+    const result = await dispatch(createCourse({ course: data }))
+
+    if (result?.status === 2000) {
       toast('Course created', { type: "success" })
       return
     }
@@ -149,6 +149,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (course) {
+      console.log(course)
       form.reset({ ...course })
     }
   }, [course])
@@ -204,94 +205,95 @@ export default function DashboardPage() {
           </div>
         </TabsContent>
         <TabsContent className="TabsContent" value="tab2">
-          <div className="mx-auto">
 
-            <Card>
-              <CardContent className="pt-6">
-                <Form {...form}>
+          <Form {...form} >
+            <div className="mx-auto">
+
+              <Card>
+                <CardContent className="pt-6">
                   <FormLabel>Configure Analysis</FormLabel>
                   <FormDescription>
                     Configure content and the processing style
                   </FormDescription>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem>
-                          <div className="space-y-4">
-                            <ScrollArea className="h-[300px] rounded-md border p-4">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="space-y-4">
+                          <ScrollArea className="h-[300px] rounded-md border p-4">
 
-                              <TextEditor note={note} />
-                            </ScrollArea>
+                            <TextEditor note={note} />
+                          </ScrollArea>
 
-                          </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                    <div className="mt-6 space-y-4">
-                      <h4 className="font-medium">Processing Style</h4>
-                      <div className="space-y-2">
-                        <Slider
-                          value={processingStyle}
-                          onValueChange={setProcessingStyle}
-                          defaultValue={processingStyle}
-                          min={1}
-                          max={3}
-                          step={1}
-                        />
-                        <p className="text-sm text-muted-foreground">
-                          {processingStyle[0] === 1 ? "High granularity - most notes become individual lessons" :
-                            processingStyle[0] === 2 ? "Balanced - mix of synthesis and individual notes" :
-                              "High synthesis - condensed learning points"}
-                        </p>
-                      </div>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleAnalyze}
-                      disabled={courseLoading}
-                      className="mt-4 w-full"
-                    >
-                      {courseLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Analyzing Notes...
-                        </>
-                      ) : (
-                        <>
-                          <BookOpen className="mr-2 h-4 w-4" />
-                          Analyze Selected Notes
-                        </>
-                      )}
-                    </Button>
-                    <div className="text-center p-8 text-muted-foreground">
-                      <BookOpen className="mx-auto h-12 w-12 mb-4" />
-                      <p>
-                        click "Analyze Selected Notes" to generate course structure
+                  <div className="mt-6 space-y-4">
+                    <h4 className="font-medium">Processing Style</h4>
+                    <div className="space-y-2">
+                      <Slider
+                        value={processingStyle}
+                        onValueChange={setProcessingStyle}
+                        defaultValue={processingStyle}
+                        min={1}
+                        max={3}
+                        step={1}
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        {processingStyle[0] === 1 ? "High granularity - most notes become individual lessons" :
+                          processingStyle[0] === 2 ? "Balanced - mix of synthesis and individual notes" :
+                            "High synthesis - condensed learning points"}
                       </p>
                     </div>
-
-                  </form>
-                </Form>
-              </CardContent>
-            </Card>
-            <div className="flex justify-between mt-2">
-              <Button onClick={() => setTab("tab1")}>
-                <ChevronLeft className="ml-2 h-4 w-4" />
-                Previous step
-              </Button>
-              <Button onClick={() => setTab("tab3")}>
-                Next Step
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleAnalyze}
+                    disabled={courseLoading}
+                    className="mt-4 w-full"
+                  >
+                    {courseLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Analyzing Notes...
+                      </>
+                    ) : (
+                      <>
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        Analyze Selected Notes
+                      </>
+                    )}
+                  </Button>
+                  <div className="text-center p-8 text-muted-foreground">
+                    <BookOpen className="mx-auto h-12 w-12 mb-4" />
+                    <p>
+                      click "Analyze Selected Notes" to generate course structure
+                    </p>
+                    <div className="flex items-center w-full justify-center pt-5">
+                      <InfoCircledIcon width={32} height={32}/>
+                      <p>Please be patient, this may take some time</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <div className="flex justify-between mt-2">
+                <Button onClick={() => setTab("tab1")}>
+                  <ChevronLeft className="ml-2 h-4 w-4" />
+                  Previous step
+                </Button>
+                <Button onClick={() => setTab("tab3")}>
+                  Next Step
+                  <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
             </div>
-          </div>
-
+          </Form>
         </TabsContent>
         <TabsContent className="TabsContent" value="tab3">
 
@@ -528,6 +530,7 @@ export default function DashboardPage() {
                   type="button"
                   onClick={async () => {
                     const trigger = await form.trigger()
+                    console.log(trigger)
                     console.log(form.formState.errors)
                     console.log(form.getValues())
                   }}

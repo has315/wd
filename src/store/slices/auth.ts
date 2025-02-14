@@ -65,7 +65,7 @@ export function login({ email, password }: { email: string, password: string }) 
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/auth/login`, { email, password });
+      const response = await axios.post(`/auth/login`, { email, password }, {withCredentials: true});
       if (response.status !== 200) return false
 
       // setSession(response.data.token)

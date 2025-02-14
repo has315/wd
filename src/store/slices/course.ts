@@ -1,7 +1,7 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
 import axios from '@/lib/axios';
-import { Course, Topic } from '@/types/Course';
+import { Course } from '@/types/Course';
 
 // ----------------------------------------------------------------------
 
@@ -10,7 +10,6 @@ type CourseState = {
   error: any;
   course: Course | null;
   selectedCourse: Course | null;
-  topics: Topic[]
   courses: Course[]
 }
 
@@ -72,7 +71,7 @@ export function getCourses() {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/courses`, {withCredentials: true});
+      const response = await axios.get(`/api/courses`,);
       dispatch(
         slice.actions.getCoursesSuccess(
           response.data
@@ -90,10 +89,16 @@ export function analzyeCourse({ notes, processingStyle }: { notes: any, processi
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/api/courses/analyze`, { notes, processingStyle }, {withCredentials: true});
+      const response = await axios.post(`/api/courses/analyze`, { notes, processingStyle },);
       dispatch(
         slice.actions.setCourse(
-          { topics: response.data }
+          {
+            topics: response.data.topics,
+            active: true,
+            delivery: { channel: "email", frequency: "daily" },
+            totalTopics: response.data.totalTopics, 
+            totalLessons: response.data.totalLessons, 
+          }
         ),
       );
       return response;
@@ -107,7 +112,7 @@ export function createCourse({ course }: { course: any }) {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/api/courses/`, { course }, {withCredentials: true});
+      const response = await axios.post(`/api/courses/`, { course },);
       dispatch(
         slice.actions.getCoursesSuccess(
           response.data

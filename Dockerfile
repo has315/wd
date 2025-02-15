@@ -1,5 +1,5 @@
 
-FROM node:18-alpine
+FROM node:latest
 
 WORKDIR /app
 

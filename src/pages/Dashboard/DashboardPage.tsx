@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import DragDropUpload from "@/components/dashboard/DragDropUpload";
-import NotesList from "@/components/dashboard/NotesList";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Check, CheckCircle, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { dispatch, useDispatch, useSelector } from "@/store/store";
 import { getNotes } from "@/store/slices/note";
-// import DragDropUpload from "@/components/dashboard/DragDropUpload";
-// import NotesList from "@/components/dashboard/NotesList";
-// import CourseSettings from "@/components/dashboard/CourseSettings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

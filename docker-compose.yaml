@@ -1,0 +1,16 @@
+services:
+  web:
+    build:
+      context: ./
+      target: runner
+    ports:
+      - "0.0.0.0:3050:3000"
+    environment:
+      NODE_ENV: production
+    networks:
+      - wd-front
+networks:
+  wd-front:
+    name: wd-front
+    external: true 
+

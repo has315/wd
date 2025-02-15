@@ -5,13 +5,15 @@ import { dispatch, useDispatch, useSelector } from "@/store/store";
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import BulletList from '@tiptap/extension-bullet-list';
+import { setSelectedNote } from "@/store/slices/note";
 
 
-type INote = {content: string}
+type INote = { content: string }
 
 export const TextEditor = ({ note }: { note: INote | null }) => {
     const [showEditor, setShowEditor] = useState(false);
     const [content, setContent] = useState('');
+    const dispatch = useDispatch()
 
 
     const editor = useEditor({
@@ -29,6 +31,7 @@ export const TextEditor = ({ note }: { note: INote | null }) => {
         },
         onUpdate: ({ editor }) => {
             setContent(editor.getHTML());
+            dispatch(setSelectedNote({ ...note, content: editor.getHTML() }))
         },
     });
 

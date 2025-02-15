@@ -57,7 +57,9 @@ const courseSchema = z.object({
     frequency: z.enum(["daily", "weekly", "biweekly"]),
   }),
   active: z.boolean(),
-  topics: z.array(topicSchema)
+  topics: z.array(topicSchema),
+  totalLessons: z.number(),
+  totalTopics: z.number()
 });
 
 type CourseFormValues = z.infer<typeof courseSchema>;

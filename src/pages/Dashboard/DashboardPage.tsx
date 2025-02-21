@@ -95,7 +95,7 @@ export default function DashboardPage() {
   const onSubmit = async (data: any) => {
     const result = await dispatch(createCourse({ course: data }))
 
-    if (result?.status === 2000) {
+    if (result?.status === 200) {
       toast('Course created', { type: "success" })
       return
     }
@@ -198,14 +198,14 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent className="TabsContent" value="tab2">
           <ConfigureAnalysis form={form} handleAnalyze={handleAnalyze} loading={courseLoading} processingStyle={processingStyle} setProcessingStyle={setProcessingStyle} note={note} />
-          <Button className="mt-4" onClick={() => setTab("tab1")}>
+          <Button className="mt-4" onClick={() => setTab("tab1")} disabled={courseLoading}>
             <ChevronLeft />
             Back
           </Button>
         </TabsContent>
         <TabsContent className="TabsContent" value="tab3">
           <ConfigureCourse course={course} form={form} isLoading={courseLoading} onSubmit={onSubmit} />
-          <Button className="mt-4" onClick={() => setTab("tab2")}>
+          <Button className="mt-4" onClick={() => setTab("tab2")} disabled={courseLoading}>
             <ChevronLeft />
             Back
           </Button>

@@ -14,9 +14,12 @@ export const ConfigureAnalysis = ({ form, note, processingStyle, setProcessingSt
 
                 <Card>
                     <CardContent className="pt-6">
-                        <FormLabel>Configure Analysis</FormLabel>
-                        <FormDescription>
-                            Configure content and the processing style
+                        <div className="pb-5">
+
+                        <FormLabel>Configure Your Wisdom Drop</FormLabel>
+                        </div>
+                        <FormDescription className="pb-2">
+                            Review your uploaded notes below. Please make any edits or deletions before we process them.
                         </FormDescription>
 
                         <FormField
@@ -48,9 +51,9 @@ export const ConfigureAnalysis = ({ form, note, processingStyle, setProcessingSt
                                     step={1}
                                 />
                                 <p className="text-sm text-muted-foreground">
-                                    {processingStyle[0] === 1 ? "High granularity - most notes become individual lessons" :
-                                        processingStyle[0] === 2 ? "Balanced - mix of synthesis and individual notes" :
-                                            "High synthesis - condensed learning points"}
+                                    {processingStyle[0] === 1 ? "High granularity - Every note becomes an individual lesson." :
+                                        processingStyle[0] === 2 ? "Balanced - Some notes are grouped together, but most remain as individual insights" :
+                                            "High synthesis - Multiple notes are condensed into succinct, overarching lessons."}
                                 </p>
                             </div>
                         </div>

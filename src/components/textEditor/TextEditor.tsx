@@ -31,7 +31,7 @@ export const TextEditor = ({ note }: { note: INote | null }) => {
         },
         onUpdate: ({ editor }) => {
             setContent(editor.getHTML());
-            dispatch(setSelectedNote({ ...note, content: editor.getHTML() }))
+            dispatch(setSelectedNote({ ...note, content: editor.getText() }))
         },
     });
 

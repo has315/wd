@@ -70,7 +70,9 @@ export default function DragDropUpload({ setTab }: { setTab: any }) {
   return (
     <div className="space-y-4">
       <div className="text-sm text-muted-foreground">
-        Supported formats: PDF, TXT, CSV files
+        <p className="">
+          Ready to transform your notes into daily insights? Simply drop your files below.
+        </p>
       </div>
       <div
         {...getRootProps()}
@@ -90,9 +92,9 @@ export default function DragDropUpload({ setTab }: { setTab: any }) {
             )}
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-2">Drop your notes here to create a new Wisdom Drop</h3>
+            <h3 className="text-lg font-semibold mb-2">Drag and drop or click to browse</h3>
             <p className="text-sm text-muted-foreground">
-              Click to browse or drag and drop your file
+             (Supports PDF, TXT, and CSV files--no need to organize, we'll do the heavy lifting.)
             </p>
           </div>
         </div>

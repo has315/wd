@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import DragDropUpload from "@/components/dashboard/DragDropUpload";
-import { Check, CheckCircle,  Info } from "lucide-react";
+import { Check, CheckCircle, ChevronLeft, Info } from "lucide-react";
 import { useDispatch, useSelector } from "@/store/store";
 import { getNotes } from "@/store/slices/note";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +14,7 @@ import { analzyeCourse, createCourse } from "@/store/slices/course";
 
 import { ConfigureAnalysis } from "@/components/dashboard/ConfigureAnalysis";
 import { ConfigureCourse } from "@/components/dashboard/ConfigureCourse";
+import { Button } from "@/components/ui/button";
 
 
 
@@ -114,10 +115,10 @@ export default function DashboardPage() {
         processingStyle: processingStyle[0],
       });
 
-      dispatch(analzyeCourse({ notes: [{ ...note }], processingStyle: processingStyle[0] }))
       toast('This can take between 2-5 minutes. Please leave this window open', { type: "warning" })
+      const analysis = await dispatch(analzyeCourse({ notes: [{ ...note }], processingStyle: processingStyle[0] }))
 
-      if (!isLoading && course) {
+      if (analysis?.status === 200) {
         toast("Analysis Complete", { type: "success" })
         setTab("tab3")
       }
@@ -186,8 +187,10 @@ export default function DashboardPage() {
         <TabsContent className="TabsContent" value="tab1">
           <div className="mx-auto">
             <h2 className="text-2xl font-semibold mb-2">
-              Create New Wisdom Drop
+              Create a New Wisdom Drop
             </h2>
+
+
             <DragDropUpload setTab={setTab} />
 
 
@@ -195,11 +198,17 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent className="TabsContent" value="tab2">
           <ConfigureAnalysis form={form} handleAnalyze={handleAnalyze} loading={courseLoading} processingStyle={processingStyle} setProcessingStyle={setProcessingStyle} note={note} />
-
+          <Button className="mt-4" onClick={() => setTab("tab1")}>
+            <ChevronLeft />
+            Back
+          </Button>
         </TabsContent>
         <TabsContent className="TabsContent" value="tab3">
-
           <ConfigureCourse course={course} form={form} isLoading={courseLoading} onSubmit={onSubmit} />
+          <Button className="mt-4" onClick={() => setTab("tab2")}>
+            <ChevronLeft />
+            Back
+          </Button>
         </TabsContent>
       </Tabs>
     </>

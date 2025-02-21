@@ -116,7 +116,7 @@ export default function DashboardPage() {
       });
 
       toast('This can take between 2-5 minutes. Please leave this window open', { type: "warning" })
-      const analysis = await dispatch(analzyeCourse({ notes: [{ ...note }], processingStyle: processingStyle[0] }))
+      const analysis = await dispatch(analzyeCourse({ notes: [note], processingStyle: processingStyle[0] }))
 
       if (analysis?.status === 200) {
         toast("Analysis Complete", { type: "success" })

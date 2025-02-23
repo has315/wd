@@ -5,6 +5,7 @@ import { Course, Topic } from '@/types/Course';
 import { jwtDecode, setSession } from '@/lib/auth/utils';
 import { persistor } from '../store';
 import { PURGE } from "redux-persist";
+import Cookies from 'js-cookie';
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +31,8 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     },
-    loginSuccess(state, action) {
+    loginSuccess(state) {
       state.isLoading = false
-      state.user = action.payload
       state.isAuthenticated = true
     },
     registerSuccess(state) {
@@ -42,6 +42,10 @@ const slice = createSlice({
       state.isLoading = false
       state.user = null
       state.isAuthenticated = false
+    },
+    setUser(state, action) {
+      state.isLoading = false
+      state.user = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -56,7 +60,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { loginSuccess, logoutSuccess} = slice.actions;
+export const { loginSuccess, logoutSuccess, setUser } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +73,8 @@ export function login({ email, password }: { email: string, password: string }) 
       if (response.status !== 200) return false
 
       setSession(response.data.token)
-     
+
+      dispatch(slice.actions.loginSuccess())
 
 
 
@@ -100,6 +105,7 @@ export function logout() {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      setSession(null)
       dispatch(slice.actions.logoutSuccess())
 
 

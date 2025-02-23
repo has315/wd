@@ -51,6 +51,7 @@ export const setSession = async (
         const { exp } = jwtDecode(accessToken); // ~1 day
         tokenExpired(exp);
     } else {
+        Cookies.remove("token")
         delete axios.defaults.headers.common.Authorization;
         window.location.href = "/auth/login";
     }

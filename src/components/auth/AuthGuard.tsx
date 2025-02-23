@@ -1,11 +1,13 @@
+import { getAccessToken, isValidToken } from "@/lib/auth/utils";
 import { useSelector } from "@/store/store";
 import { useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
     // const { isAuthenticated, isIdle, isInitialized } = useAuthContext();
-    const { user, error, isAuthenticated, isLoading} = useSelector(state => state.auth)
-
+    const { user, error, isAuthenticated, isLoading } = useSelector(state => state.auth)
+    const [isTokenExpired, setIsTokenExpired] = useState(false);
+    const token = getAccessToken()
 
     const { pathname } = useLocation();
 
@@ -21,13 +23,17 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         if (pathname !== requestedLocation) {
             setRequestedLocation(pathname);
         }
-       
-        return <Navigate to={'/auth/login'} />; 
+
+        return <Navigate to={'/auth/login'} />;
     }
 
     if (requestedLocation && pathname !== requestedLocation) {
         setRequestedLocation(null);
         return <Navigate to={requestedLocation} />;
+    }
+
+    if (!token || !isValidToken(token)) {
+        return <Navigate to={'/auth/login'} />
     }
 
     return <> {children} </>;

@@ -2,7 +2,7 @@ import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
 import axios from '@/lib/axios';
 import { Course, Topic } from '@/types/Course';
-import { jwtDecode, setSession } from '@/lib/auth/utils';
+import { isValidToken, jwtDecode, setSession } from '@/lib/auth/utils';
 import { persistor } from '../store';
 import { PURGE } from "redux-persist";
 import Cookies from 'js-cookie';
@@ -63,6 +63,35 @@ export default slice.reducer;
 export const { loginSuccess, logoutSuccess, setUser } = slice.actions;
 
 // ----------------------------------------------------------------------
+export function initializeAuth() {
+  return async (dispatch: Dispatch) => {
+      dispatch(slice.actions.startLoading());
+
+      const token = Cookies.get("token");
+      if (!token || !isValidToken(token)) {
+          dispatch(logoutSuccess());
+          setSession(null);
+          return;
+      }
+
+      try {
+          setSession(token);
+          const decodedToken = jwtDecode(token);
+          const userResponse = await axios.get(`/auth/user/${decodedToken.id}`);
+
+          if (userResponse.status === 200) {
+              dispatch(setUser(userResponse.data[0]));
+          } else {
+              dispatch(logoutSuccess());
+              setSession(null);
+          }
+      } catch (error) {
+          console.error("Error fetching user:", error);
+          dispatch(logoutSuccess());
+          setSession(null);
+      }
+  };
+}
 
 
 export function login({ email, password }: { email: string, password: string }) {

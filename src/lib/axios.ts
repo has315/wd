@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getAccessToken, isValidToken, setSession } from './auth/utils';
+import { isValidToken, setSession } from './auth/utils';
 import Cookies from 'js-cookie';
 // config
 
@@ -25,7 +25,7 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401) {
       if (
         !window.location.href.includes('/auth/')
-    ) {
+      ) {
         const token = Cookies.get("token")
         if (token) {
           setSession(token)

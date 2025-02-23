@@ -2,7 +2,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useEffect } from 'react';
 import { useSelector } from '@/store/store';
-import { getAccessToken, isValidToken } from '@/lib/auth/utils';
+import { isValidToken } from '@/lib/auth/utils';
+import Cookies from 'js-cookie';
 
 // ----------------------------------------------------------------------
 
@@ -15,21 +16,13 @@ export default function GuestGuard({ children }: GuestGuardProps) {
 
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const token = getAccessToken()
+  const token = Cookies.get("token")
 
   useEffect(() => {
     if (isAuthenticated && token && isValidToken(token)) {
       navigate("/"); // AUTH GUARD HOOK TAKES OVER
     }
   }, [isAuthenticated, navigate, token]);
-
-
-  useEffect(() => {
-    if (!token || !isValidToken(token)) {
-      navigate('/auth/login')
-    }
-
-  }, [token])
 
 
   if (isLoading) {

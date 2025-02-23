@@ -56,7 +56,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { } = slice.actions;
+export const { loginSuccess, logoutSuccess} = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -68,29 +68,9 @@ export function login({ email, password }: { email: string, password: string }) 
       const response = await axios.post(`/auth/login`, { email, password }, { withCredentials: true });
       if (response.status !== 200) return false
 
-      // setSession(response.data.token)
-      const decodedToken = jwtDecode(response.data.token)
-      const userResponse = await axios.get(`/auth/user/${decodedToken.id}`);
-      if (userResponse.status !== 200) return false
+      setSession(response.data.token)
+     
 
-      dispatch(
-        slice.actions.loginSuccess(
-          userResponse.data[0]
-        ),
-      );
-
-      let expiredTimer;
-
-      const currentTime = Date.now();
-
-      const timeLeft = decodedToken?.exp * 1000 - currentTime - 100000;
-      clearTimeout(expiredTimer);
-
-      expiredTimer = setTimeout(async () => {
-
-        dispatch(slice.actions.logoutSuccess())
-
-      }, timeLeft);
 
 
       return response;

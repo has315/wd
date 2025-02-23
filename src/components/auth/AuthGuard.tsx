@@ -1,13 +1,17 @@
-import { getAccessToken, isValidToken } from "@/lib/auth/utils";
-import { useSelector } from "@/store/store";
-import { useEffect, useState } from "react";
+import { isValidToken, jwtDecode, setSession } from "@/lib/auth/utils";
+import axios from "@/lib/axios";
+import { loginSuccess, logoutSuccess } from "@/store/slices/auth";
+import { useDispatch, useSelector } from "@/store/store";
+import Cookies from "js-cookie";
+import { useCallback, useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
     // const { isAuthenticated, isIdle, isInitialized } = useAuthContext();
     const { user, error, isAuthenticated, isLoading } = useSelector(state => state.auth)
-    const token = getAccessToken()
+    const token = Cookies.get("token")
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const { pathname } = useLocation();
 
@@ -15,13 +19,33 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
         null,
     );
 
+    const initialize = useCallback(async () => {
+        try {
+
+            if (token && isValidToken(token)) {
+                setSession(token);
+                const decodedToken = jwtDecode(token)
+                const userResponse = await axios.get(`/auth/user/${decodedToken.id}`);
+                if (userResponse.status !== 200) return false
+
+                dispatch(
+                    loginSuccess(
+                        userResponse.data[0]
+                    ),
+                );
+            } else {
+                dispatch(logoutSuccess());
+            }
+        } catch (error) {
+            console.error(error);
+            dispatch(logoutSuccess());
+
+        }
+    }, [token]);
 
     useEffect(() => {
-        if (!token || !isValidToken(token) || !user ||  !isAuthenticated) {
-            navigate('/auth/login')
-        }
-
-    }, [token, user, isAuthenticated])
+        initialize()
+    }, [initialize])
 
     if (isLoading) {
         return <>Loading ...</>;

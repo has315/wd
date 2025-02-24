@@ -18,6 +18,9 @@ export interface Course {
   };
   active: boolean;
   topics: Topic[];
+  totalLessons: number;
+  totalTopics: number;
+  entriesProccesed: number
 }
 
 export interface Topic {

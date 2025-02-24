@@ -22,22 +22,20 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                             <div className="flex items-center justify-between">
                                 <h3 className="font-semibold text-lg">Configure Course Structure</h3>
                                 <div className="text-sm text-muted-foreground">
-                                    <p>
-
-                                        lessons selected
-                                    </p>
-                                    <p>Processed notes total</p>
+                                    <p>{course?.totalLessons} lessons selected</p>
+                                    <p>{course?.entriesProccesed} Processed notes total</p>
                                 </div>
                             </div>
 
                             <Accordion type="single" collapsible>
-                                <ScrollArea>
 
-                                    <FormField
-                                        control={form.control}
-                                        name="topics"
-                                        render={({ field }) =>
-                                            <>
+                                <FormField
+                                    control={form.control}
+                                    name="topics"
+                                    render={({ field }) =>
+                                        <ScrollArea >
+                                            <div className="h-[700px]">
+
                                                 {course?.topics?.map((topic, topicIndex) => (
                                                     <div key={topicIndex} className="border rounded-lg mb-4">
                                                         <div className="p-4">
@@ -48,6 +46,7 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                                                 {topic.title}
                                                             </h4>
                                                             <div className="space-y-2">
+
                                                                 {topic.lessons?.map((section, sectionIndex) => (
                                                                     <AccordionItem
                                                                         key={`${topicIndex}-${sectionIndex}`}
@@ -100,15 +99,17 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                                                         </div>
                                                                     </AccordionItem>
                                                                 ))}
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 ))}
-                                            </>
 
-                                        }
-                                    />
-                                </ScrollArea>
+                                            </div>
+                                        </ScrollArea>
+
+                                    }
+                                />
 
                             </Accordion>
 
@@ -199,30 +200,6 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                             />
                         </div>
 
-                        {/* <FormField
-                            control={form.control}
-                            name="active"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                    <div className="space-y-0.5">
-                                        <FormLabel className="text-base">
-                                            Activate Course
-                                        </FormLabel>
-                                        <FormDescription>
-                                            When active, this course will start delivering wisdom drops based on your
-                                            schedule
-                                        </FormDescription>
-                                    </div>
-                                    <FormControl>
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        /> */}
-
                         <Button
                             type="submit"
                             className="w-full"
@@ -244,13 +221,7 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                     </form>
                 </Form>
             </div>
-            <div className="flex justify-start mt-2">
-                {/* <Button onClick={() => setTab("tab2")}>
-                    <ChevronLeft className="ml-2 h-4 w-4" />
-                    Previous Step
-                </Button> */}
 
-            </div>
         </>
 
     )

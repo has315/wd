@@ -40,10 +40,10 @@ export default function ProfilePage() {
     const result = await dispatch(updateProfile({ profile: data }))
 
     if (result?.status === 200) {
-      toast('Course created', { type: "success" })
+      toast('Profile updated', { type: "success" })
       return
     }
-    toast('Course failed to create', { type: "error" })
+    toast('Profile failed to update', { type: "error" })
   }
 
 

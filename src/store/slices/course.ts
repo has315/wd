@@ -98,6 +98,7 @@ export function analzyeCourse({ notes, processingStyle }: { notes: any, processi
             delivery: { channel: "email", frequency: "daily" },
             totalTopics: response.data.totalTopics, 
             totalLessons: response.data.totalLessons, 
+            entriesProccesed: response.data.entriesProccesed
           }
         ),
       );

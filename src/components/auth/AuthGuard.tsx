@@ -5,7 +5,8 @@ import { initializeAuth } from "@/store/slices/auth";
 
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-    const { user, isAuthenticated, isLoading } = useSelector((state) => state.auth);
+    const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
+    const { email, isLoading: isLoadingProfile } = useSelector((state) => state.profile);
     const { pathname } = useLocation();
     const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
     const dispatch = useDispatch()
@@ -16,11 +17,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     }, [isAuthenticated])
 
 
-    if (isLoading) {
+    if (isLoadingProfile || isLoading) {
         return <>Loading...</>;
     }
 
-    if (!isAuthenticated || !user) {
+    if (!isAuthenticated || !email) {
         if (pathname !== requestedLocation) {
             setRequestedLocation(pathname);
         }

@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import courseReducer from './slices/course'
 import noteReducer from './slices/note'
 import authReducer from './slices/auth'
+import profileReducer from './slices/profile'
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -34,10 +35,18 @@ export const notePersistConfig = {
   whitelist: [],
 };
 
+export const profilePersistConfig = {
+  key: 'note',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: [],
+};
+
 const rootReducer = combineReducers({
   course: persistReducer(coursePersistConfig, courseReducer),
   note: persistReducer(notePersistConfig, noteReducer),
   auth: persistReducer(authPersistConfig, authReducer),
+  profile: persistReducer(profilePersistConfig, profileReducer),
 });
 
 export default rootReducer;

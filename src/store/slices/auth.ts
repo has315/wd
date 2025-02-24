@@ -6,6 +6,7 @@ import { isValidToken, jwtDecode, setSession } from '@/lib/auth/utils';
 import { persistor } from '../store';
 import { PURGE } from "redux-persist";
 import Cookies from 'js-cookie';
+import { getProfileSuccess } from './profile';
 
 // ----------------------------------------------------------------------
 
@@ -40,13 +41,9 @@ const slice = createSlice({
     },
     logoutSuccess(state) {
       state.isLoading = false
-      state.user = null
       state.isAuthenticated = false
     },
-    setUser(state, action) {
-      state.isLoading = false
-      state.user = action.payload
-    }
+
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => {
@@ -60,36 +57,37 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { loginSuccess, logoutSuccess, setUser } = slice.actions;
+export const { loginSuccess, logoutSuccess, } = slice.actions;
 
 // ----------------------------------------------------------------------
 export function initializeAuth() {
   return async (dispatch: Dispatch) => {
-      dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startLoading());
 
-      const token = Cookies.get("token");
-      if (!token || !isValidToken(token)) {
-          dispatch(logoutSuccess());
-          setSession(null);
-          return;
+    const token = Cookies.get("token");
+    if (!token || !isValidToken(token)) {
+      dispatch(logoutSuccess());
+      setSession(null);
+      return;
+    }
+
+    try {
+      setSession(token);
+      const decodedToken = jwtDecode(token);
+      const userResponse = await axios.get(`/auth/user/${decodedToken.id}`);
+
+      if (userResponse.status === 200) {
+        dispatch(getProfileSuccess(userResponse.data[0]))
+        dispatch(loginSuccess())
+      } else {
+        dispatch(logoutSuccess());
+        setSession(null);
       }
-
-      try {
-          setSession(token);
-          const decodedToken = jwtDecode(token);
-          const userResponse = await axios.get(`/auth/user/${decodedToken.id}`);
-
-          if (userResponse.status === 200) {
-              dispatch(setUser(userResponse.data[0]));
-          } else {
-              dispatch(logoutSuccess());
-              setSession(null);
-          }
-      } catch (error) {
-          console.error("Error fetching user:", error);
-          dispatch(logoutSuccess());
-          setSession(null);
-      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      dispatch(logoutSuccess());
+      setSession(null);
+    }
   };
 }
 

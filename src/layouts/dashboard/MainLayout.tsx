@@ -8,7 +8,7 @@ import { PopoverContent } from "@/components/ui/popover";
 import { CircleUser } from "lucide-react";
 import { useDispatch } from "@/store/store";
 import { logout } from "@/store/slices/auth";
-
+import { Logo } from "@/icons/Logo"
 export default function MainLayout() {
   const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ export default function MainLayout() {
       <header className="border-b">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            Wisdom drop
+            <Logo height="68" width="120"/>
             <Popover.Root>
               <Popover.Trigger asChild>
                 <button
@@ -47,8 +47,8 @@ export default function MainLayout() {
                       </Popover.Close>
                     </div>
                     <div className="flex flex-col">
-                      <div className="flex items-center">
-                        <Link to="/profile/settings" className="">
+                      <div className="flex items-center mb-2.5">
+                        <Link to="/profile/settings" className="hover:bg-primary/20">
                           Profile
                         </Link>
                       </div>

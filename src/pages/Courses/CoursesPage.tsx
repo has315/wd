@@ -13,6 +13,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 
@@ -52,9 +53,9 @@ type CourseFormValues = z.infer<typeof courseSchema>;
 
 export default function CoursesPage() {
   const dispatch = useDispatch()
-  const { courses, courseDialogueOpen, selectedCourse} = useSelector(state => state.course)
+  const { courses, courseDialogueOpen, selectedCourse } = useSelector(state => state.course)
 
-const form = useForm<CourseFormValues>({
+  const form = useForm<CourseFormValues>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
       title: "",
@@ -79,10 +80,9 @@ const form = useForm<CourseFormValues>({
   }, [selectedCourse])
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <div style={{ width: "100%", height: "100%" }}>
-        <AgGridReact rowData={courses} columnDefs={columndDefs} />
-      </div>
+    <div className='pt-2.5 w-full h-[620px]'>
+      
+      <AgGridReact rowData={courses} columnDefs={columndDefs} />
 
       <Dialog open={courseDialogueOpen} onOpenChange={() => dispatch(setDialogueOpen(false))}>
 
@@ -169,7 +169,7 @@ const form = useForm<CourseFormValues>({
                           <SelectItem value="biweekly">Bi-weekly</SelectItem>
                         </SelectContent>
                       </Select>
-                     
+
                       <FormMessage />
                     </FormItem>
                   )}

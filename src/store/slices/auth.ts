@@ -77,7 +77,13 @@ export function initializeAuth() {
       const userResponse = await axios.get(`/auth/user/${decodedToken.id}`);
 
       if (userResponse.status === 200) {
-        dispatch(getProfileSuccess(userResponse.data[0]))
+        dispatch(getProfileSuccess({
+          id: userResponse.data[0].id,
+          email: userResponse.data[0].email,
+          phoneNumber: userResponse.data[0].phone_number,
+          username: userResponse.data[0].username,
+          createdAt: userResponse.data[0].createdAt
+        }))
         dispatch(loginSuccess())
       } else {
         dispatch(logoutSuccess());

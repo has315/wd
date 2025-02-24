@@ -7,18 +7,22 @@ import axios from '@/lib/axios';
 type IProfileInitialState = {
   isLoading: boolean,
   error: any,
-  email: string,
-  phoneNumber: string,
-  id: number,
+  profile: {
+    email: string,
+    phoneNumber: string,
+    id: number,
+  }
 }
 
 
 const initialState: IProfileInitialState = {
   isLoading: false,
   error: null,
-  id: 0,
-  email: "",
-  phoneNumber: ""
+  profile: {
+    id: 0,
+    email: "",
+    phoneNumber: ""
+  }
 };
 
 
@@ -39,16 +43,12 @@ const slice = createSlice({
 
     getProfileSuccess(state, action) {
       state.isLoading = false;
-      state.id = action.payload.id;
-      state.email = action.payload.email;
-      state.phoneNumber = action.payload.phoneNumber;
+      state.profile = action.payload
     },
 
     updateProfileSuccess(state, action) {
       state.isLoading = false;
-      state.id = action.payload.id;
-      state.email = action.payload.email;
-      state.phoneNumber = action.payload.phoneNumber;
+      state.profile = action.payload
     },
 
   },
@@ -62,12 +62,24 @@ export const { getProfileSuccess } = slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function updateProfile() {
+export function updateProfile({ profile }: {
+  profile: {
+    email: string,
+    phoneNumber: string,
+    id: number,
+  }
+}) {
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`/api/profile`);
-      dispatch(slice.actions.updateProfileSuccess(response.data));
+      const response = await axios.put(`/api/profile`, { ...profile });
+      dispatch(slice.actions.updateProfileSuccess({
+        id: response.data[0].id,
+        email: response.data[0].email,
+        phoneNumber: response.data[0].phone_number,
+        username: response.data[0].username,
+        createdAt: response.data[0].createdAt
+      }))
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

@@ -51,7 +51,7 @@ export default function ProfilePage() {
 
                   <FormMessage />
                   <FormControl>
-                    <Input {...field} placeholder="Enter email" />
+                    <Input {...field} placeholder="At which email address do you want to receive your Wisdom Drops?" />
                   </FormControl>
                 </FormItem>
               )}
@@ -66,19 +66,19 @@ export default function ProfilePage() {
 
                   <FormMessage />
                   <FormControl>
-                    <Input {...field} placeholder="Enter phone number" />
+                    <Input {...field} placeholder="At which whatsapp address do you want to receive your Wisdom Drops?" />
                   </FormControl>
                 </FormItem>
               )}
             />
-           <Button
+            <Button
               type="submit"
               className="w-full"
             >SUBMIT</Button>
 
           </form>
         </Form>
-      
+
       </div>
     </>
   );

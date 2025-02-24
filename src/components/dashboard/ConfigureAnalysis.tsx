@@ -1,4 +1,3 @@
-import { InfoCircledIcon } from "@radix-ui/react-icons"
 import { TextEditor } from "../textEditor/TextEditor"
 import { Button } from "../ui/button"
 import { Card, CardContent } from "../ui/card"

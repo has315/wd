@@ -1,63 +1,187 @@
-import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
-import { AllCommunityModule, ColDef, ColGroupDef, ModuleRegistry, ValueGetterParams } from 'ag-grid-community';
+
+
 import { useEffect, useState } from 'react';
-import { getCourses } from '@/store/slices/course';
+import { getCourses, setDialogueOpen } from '@/store/slices/course';
 import { useDispatch, useSelector } from '@/store/store';
+import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
+import { columndDefs } from '@/lib/gridDefinition';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
 
-const CustomButtonComponent = () => {
-  return <button onClick={() => window.alert("clicked")}>Push Me!</button>;
-};
+
+const lessonSchema = z.object({
+  title: z.string(),
+  learningContent: z.string(),
+  story: z.string(),
+  reflectionQuestion: z.string(),
+  note: z.string(),
+});
+
+const topicSchema = z.object({
+  title: z.string(),
+  lessons: z.array(lessonSchema),
+});
+
+// Form validation schema
+const courseSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  delivery: z.object({
+    channel: z.enum(["email", "slack", "whatsapp"]),
+    frequency: z.enum(["daily", "weekly", "biweekly"]),
+  }),
+  topics: z.array(topicSchema),
+  totalLessons: z.number(),
+  totalTopics: z.number()
+});
+
+
+
+
+
+
+type CourseFormValues = z.infer<typeof courseSchema>;
+
 
 export default function CoursesPage() {
   const dispatch = useDispatch()
-  const { courses } = useSelector(state => state.course)
+  const { courses, courseDialogueOpen, selectedCourse} = useSelector(state => state.course)
 
-  const [columnDefs, setColumnDefs] = useState<
-    (ColDef<any, any> | ColGroupDef<any>)[]
-  >([
-    {
-      field: "id",
-      headerName: "ID",
-      flex: 1,
+const form = useForm<CourseFormValues>({
+    resolver: zodResolver(courseSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      delivery: {
+        channel: "email",
+        frequency: "daily",
+      },
+      topics: []
     },
-
-    {
-      field: "title",
-      headerName: "Title",
-      flex: 1,
-    },
-    {
-      field: "description",
-      headerName: "Description",
-      flex: 1,
-    },
-    {
-      field: "delivery",
-      valueGetter: (p: ValueGetterParams) => p.data.delivery.channel,
-      headerName: "Delivery method",
-      flex: 1,
-    },
-    {
-      field: "frequency",
-      valueGetter: (p: ValueGetterParams) => p.data.delivery.frequency,
-      headerName: "Frequency",
-      flex: 1,
-    },
-
-    { field: "button", cellRenderer: CustomButtonComponent, flex: 1 },
-  ]);
+  });
 
   useEffect(() => {
     dispatch(getCourses())
   }, [])
 
+
+  useEffect(() => {
+    if (selectedCourse) {
+      form.reset({ ...selectedCourse })
+    }
+  }, [selectedCourse])
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <div style={{ width: "100%", height: "100%" }}>
-        <AgGridReact rowData={courses} columnDefs={columnDefs} />
+        <AgGridReact rowData={courses} columnDefs={columndDefs} />
       </div>
+
+      <Dialog open={courseDialogueOpen} onOpenChange={() => dispatch(setDialogueOpen(false))}>
+
+        <DialogPortal>
+          <DialogOverlay />
+          <DialogContent>
+            <Form {...form} >
+
+              <DialogTitle>Edit course</DialogTitle>
+              <DialogDescription>Configure your course settings</DialogDescription>
+
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter course title" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} placeholder="Course overview" className="min-h-[100px]" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="delivery.channel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Delivery Channel</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select channel" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="email">Email</SelectItem>
+                          <SelectItem value="slack">Slack</SelectItem>
+                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="delivery.frequency"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Delivery Frequency</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select frequency" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="daily">Daily</SelectItem>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                          <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                        </SelectContent>
+                      </Select>
+                     
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <DialogClose />
+            </Form>
+          </DialogContent>
+        </DialogPortal>
+
+
+      </Dialog>
     </div>
   );
 };

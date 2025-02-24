@@ -10,7 +10,8 @@ type CourseState = {
   error: any;
   course: Course | null;
   selectedCourse: Course | null;
-  courses: Course[]
+  courses: Course[];
+  courseDialogueOpen: boolean;
 }
 
 const initialState: CourseState = {
@@ -19,6 +20,7 @@ const initialState: CourseState = {
   course: null,
   selectedCourse: null,
   courses: [],
+  courseDialogueOpen: false
 };
 
 const slice = createSlice({
@@ -50,6 +52,11 @@ const slice = createSlice({
       state.course = action.payload;
     },
 
+    setDialogueOpen(state, action) {
+      state.isLoading = false;
+      state.courseDialogueOpen = action.payload;
+    },
+
 
 
     addCourse(state, action) {
@@ -63,7 +70,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { setSelectedCourse } = slice.actions;
+export const { setSelectedCourse, setDialogueOpen } = slice.actions;
 
 // ----------------------------------------------------------------------
 

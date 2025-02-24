@@ -5,7 +5,8 @@ import "./index.css";
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './store/store';
-
+import { AllCommunityModule, ModuleRegistry, } from 'ag-grid-community';
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 function App() {
 

@@ -95,7 +95,7 @@ export default function DashboardPage() {
 
 
   const onSubmit = async (data: any) => {
-    const result = await dispatch(createCourse({ course: data }))
+    const result = await dispatch(createCourse({ course: {...data, processingStyle: processingStyle[0]} }))
 
     if (result?.status === 200) {
       navigate("/courses")

@@ -30,6 +30,11 @@ export const columndDefs: ColDef<any, any>[] = [
         flex: 1,
     },
     {
+        field: "totalTopicsSent",
+        headerName: "Course Topics sent",
+        flex: 1,
+    },
+    {
         field: "processingStyle",
         headerName: "Course Processing Style",
         flex: 1,

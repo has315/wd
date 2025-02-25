@@ -21,22 +21,27 @@ export const columndDefs: ColDef<any, any>[] = [
     },
     {
         field: "totalLessons",
-        headerName: "Course Lessons",
+        headerName: "Total Lessons",
         flex: 1,
     },
     {
         field: "totalTopics",
-        headerName: "Course Topics",
+        headerName: "Total Topics",
+        flex: 1,
+    },
+    {
+        field: "active",
+        headerName: "Active",
         flex: 1,
     },
     {
         field: "totalTopicsSent",
-        headerName: "Course Topics sent",
+        headerName: "Topics sent",
         flex: 1,
     },
     {
         field: "processingStyle",
-        headerName: "Course Processing Style",
+        headerName: "Processing Style",
         flex: 1,
     },
     {

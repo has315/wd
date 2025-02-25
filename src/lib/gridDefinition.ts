@@ -20,6 +20,21 @@ export const columndDefs: ColDef<any, any>[] = [
         flex: 1,
     },
     {
+        field: "totalLessons",
+        headerName: "Course Lessons",
+        flex: 1,
+    },
+    {
+        field: "totalTopics",
+        headerName: "Course Topics",
+        flex: 1,
+    },
+    {
+        field: "processingStyle",
+        headerName: "Course Processing Style",
+        flex: 1,
+    },
+    {
         field: "delivery",
         valueGetter: (p: ValueGetterParams) => p.data.delivery.channel,
         headerName: "Delivery method",

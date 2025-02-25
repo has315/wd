@@ -15,7 +15,7 @@ export const ConfigureAnalysis = ({ form, note, processingStyle, setProcessingSt
                     <CardContent className="pt-6">
                         <div className="pb-5">
 
-                        <FormLabel>Configure Your Wisdom Drop</FormLabel>
+                            <FormLabel>Configure Your Wisdom Drop</FormLabel>
                         </div>
                         <FormDescription className="pb-2">
                             Review your uploaded notes below. Please make any edits or deletions before we process them.

@@ -15,6 +15,7 @@ import { analzyeCourse, createCourse } from "@/store/slices/course";
 import { ConfigureAnalysis } from "@/components/dashboard/ConfigureAnalysis";
 import { ConfigureCourse } from "@/components/dashboard/ConfigureCourse";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -63,7 +64,8 @@ export default function DashboardPage() {
   const { note, isLoading } = useSelector(state => state.note)
   const { course, isLoading: courseLoading } = useSelector(state => state.course)
   const dispatch = useDispatch();
-
+  const navigate = useNavigate()
+  
 
 
   const onTabChange = (value: string) => {
@@ -96,6 +98,7 @@ export default function DashboardPage() {
     const result = await dispatch(createCourse({ course: data }))
 
     if (result?.status === 200) {
+      navigate("/coursess")
       toast('Course created', { type: "success" })
       return
     }

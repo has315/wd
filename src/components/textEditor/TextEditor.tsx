@@ -48,7 +48,11 @@ export const TextEditor = ({ note }: { note: INote | null }) => {
         }
     }, [editor]);
 
-
+    useEffect(() => {
+        if(editor) {
+            dispatch(setSelectedNote({ ...note, content: editor.getText().replace(/\n+/g, "\n") }))
+        }
+    }, [])
 
     return (
         <>

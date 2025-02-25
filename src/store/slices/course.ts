@@ -57,11 +57,17 @@ const slice = createSlice({
       state.courseDialogueOpen = action.payload;
     },
 
-
-
     addCourse(state, action) {
       state.isLoading = false
       state.courses.push(action.payload)
+    },
+    updateCourse(state, action) {
+      state.isLoading = false
+      const updatedCourses = state.courses.map(course => {
+        if (course.id === action.payload.id) return action.payload
+        return course
+      })
+      state.courses = updatedCourses
     }
   },
 });
@@ -103,8 +109,8 @@ export function analzyeCourse({ notes, processingStyle }: { notes: any, processi
             topics: response.data.topics,
             active: true,
             delivery: { channel: "email", frequency: "daily" },
-            totalTopics: response.data.totalTopics, 
-            totalLessons: response.data.totalLessons, 
+            totalTopics: response.data.totalTopics,
+            totalLessons: response.data.totalLessons,
             entriesProccesed: response.data.entriesProccesed
           }
         ),
@@ -124,6 +130,24 @@ export function createCourse({ course }: { course: any }) {
       dispatch(
         slice.actions.getCoursesSuccess(
           response.data
+        ),
+      );
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function updateCourse({ course }: { course: any }) {
+  console.log({ course })
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/course/`, { course },);
+      console.log(response.data)
+      dispatch(
+        slice.actions.updateCourse(
+          response.data[0]
         ),
       );
       return response;

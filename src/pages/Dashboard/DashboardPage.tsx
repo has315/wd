@@ -98,7 +98,7 @@ export default function DashboardPage() {
     const result = await dispatch(createCourse({ course: data }))
 
     if (result?.status === 200) {
-      navigate("/coursess")
+      navigate("/courses")
       toast('Course created', { type: "success" })
       return
     }

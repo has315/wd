@@ -7,6 +7,7 @@ import { persistor } from '../store';
 import { PURGE } from "redux-persist";
 import Cookies from 'js-cookie';
 import { getProfileSuccess } from './profile';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
@@ -103,14 +104,13 @@ export function login({ email, password }: { email: string, password: string }) 
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post(`/auth/login`, { email, password }, { withCredentials: true });
-      if (response.status !== 200) return false
-
+      if (response.status !== 200) {
+        toast('Something went wrong', { type: "error" })
+        return false
+      }
+      toast('Login success', { type: "success" })
       setSession(response.data.token)
-
       dispatch(slice.actions.loginSuccess())
-
-
-
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -124,7 +124,11 @@ export function register({ email, password }: { email: string, password: string 
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post(`/auth/register`, { email, password });
-      if (response.status !== 200) return false
+      if (response.status !== 200) {
+        toast('Something went wrong', { type: "error" })
+        return false
+      }
+      toast('Account Created', { type: "success" })
       dispatch(slice.actions.registerSuccess())
       return response;
     } catch (error) {

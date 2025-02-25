@@ -40,7 +40,6 @@ export default function LoginPage() {
 
   const onLogin = async ({ email, password }: { email: string, password: string }) => {
     const result = await dispatch(login({email, password}))
-    console.log(result)
   };
 
   const onRegister = async ({ email, password }: { email: string, password: string }) => {

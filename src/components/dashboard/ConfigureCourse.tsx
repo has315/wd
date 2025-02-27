@@ -192,7 +192,7 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                             </SelectContent>
                                         </Select>
                                         <FormDescription>
-                                            How often you want to receive your wisdom drops
+                                            How often you want to receive your Wisdom Drops
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>

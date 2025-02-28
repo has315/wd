@@ -7,7 +7,9 @@ import {
   LoginPage,
   DashboardPage,
   CoursesPage,
-  ProfilePage
+  ProfilePage,
+  PasswordResetPage,
+  ForgotPasswordPage
 } from './elements';
 import MainLayout from '@/layouts/dashboard/MainLayout';
 import AuthGuard from '@/components/auth/AuthGuard';
@@ -28,6 +30,21 @@ export default function Router() {
             </GuestGuard>
           ),
         },
+        {
+          path: 'password-reset/:id/:token',
+          element: (
+              <PasswordResetPage />
+          ),
+        },
+        {
+          path: 'forgot-password',
+          element: (
+            <GuestGuard>
+              <ForgotPasswordPage />
+            </GuestGuard>
+          ),
+        },
+     
 
       ]
     },

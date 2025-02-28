@@ -20,11 +20,20 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { login, register } from "@/store/slices/auth";
 import { dispatch } from "@/store/store";
-
+import { Link } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+// Form validation schema
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required"),
+  password: z.string().min(1, "Password is required"),
+  
+});
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("login");
 
   const loginForm = useForm({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -39,11 +48,11 @@ export default function LoginPage() {
   });
 
   const onLogin = async ({ email, password }: { email: string, password: string }) => {
-    const result = await dispatch(login({email, password}))
+    const result = await dispatch(login({ email, password }))
   };
 
   const onRegister = async ({ email, password }: { email: string, password: string }) => {
-    const result = await dispatch(register({email, password}))
+    const result = await dispatch(register({ email, password }))
     console.log(result)
   };
 
@@ -94,9 +103,11 @@ export default function LoginPage() {
                   <Button type="submit" className="w-full">
                     Login
                   </Button>
-                  <Button type="submit" className="w-full">
-                    Forgot password
-                  </Button>
+                  <Link
+                    to={"/auth/forgot-password"}
+                  >
+                    Forgot password?
+                  </Link>
                 </form>
               </Form>
             </TabsContent>

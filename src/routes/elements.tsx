@@ -17,7 +17,12 @@ const Loadable = (Component: ElementType) => (props: any) => (
 export const LoginPage = Loadable(
   lazy(() => import('../pages/Auth/LoginPage')),
 );
-
+export const PasswordResetPage = Loadable(
+  lazy(() => import('../pages/Auth/PasswordResetPage')),
+);
+export const ForgotPasswordPage = Loadable(
+  lazy(() => import('../pages/Auth/ForgotPasswordPage')),
+);
 //DASHBOARD
 export const DashboardPage = Loadable(
   lazy(() => import('../pages/Dashboard/DashboardPage')),
@@ -30,3 +35,4 @@ export const CoursesPage = Loadable(
 export const ProfilePage = Loadable(
   lazy(() => import('../pages/Profile/ProfilePage')),
 );
+

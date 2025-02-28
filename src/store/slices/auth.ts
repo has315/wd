@@ -106,7 +106,7 @@ export function login({ email, password }: { email: string, password: string }) 
       const response = await axios.post(`/auth/login`, { email, password }, { withCredentials: true });
       if (response.status !== 200) {
         toast('Something went wrong', { type: "error" })
-        return false
+        return { status: 500 }
       }
       toast('Login success', { type: "success" })
       setSession(response.data.token)
@@ -126,9 +126,45 @@ export function register({ email, password }: { email: string, password: string 
       const response = await axios.post(`/auth/register`, { email, password });
       if (response.status !== 200) {
         toast('Something went wrong', { type: "error" })
-        return false
+        return { status: 500 }
       }
       toast('Account Created', { type: "success" })
+      dispatch(slice.actions.registerSuccess())
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.log(error)
+    }
+  };
+}
+export function forgotPassword({ email, }: { email: string, }) {
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`/auth/forgot-password`, { email });
+      if (response.status !== 200) {
+        toast('Something went wrong', { type: "error" })
+        return { status: 500 }
+      }
+      toast('Password reset email sent', { type: "success" })
+      dispatch(slice.actions.registerSuccess())
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+      console.log(error)
+    }
+  };
+}
+export function resetPassword({ password, id, token }: { password: string; id: number, token: string }) {
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post(`/auth/reset-password/`, { password, id, token });
+      if (response.status !== 200) {
+        toast('Something went wrong', { type: "error" })
+        return { status: 500 }
+      }
+      toast('Password reset successfully', { type: "success" })
       dispatch(slice.actions.registerSuccess())
       return response;
     } catch (error) {

@@ -203,8 +203,7 @@ export default function CoursesPage() {
                           Activate Course
                         </FormLabel>
                         <FormDescription>
-                          When active, this course will start delivering Wisdom Drops based on your
-                          schedule
+                        When active, this course will start delivering “Wisdom Drops based on your schedule
                         </FormDescription>
                       </div>
                       <FormControl>

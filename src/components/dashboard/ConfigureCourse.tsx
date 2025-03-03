@@ -165,6 +165,10 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                                 <SelectItem value="whatsapp">WhatsApp</SelectItem>
                                             </SelectContent>
                                         </Select>
+                                        <FormDescription>
+                                            Where do you want to receive your Wisdom Drops
+                                        </FormDescription>
+
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -192,7 +196,7 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                             </SelectContent>
                                         </Select>
                                         <FormDescription>
-                                            How often you want to receive your Wisdom Drops
+                                            How often do you want to receive your Wisdom Drops (always at 8:30 am CET)
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>

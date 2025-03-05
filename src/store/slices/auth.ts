@@ -37,7 +37,14 @@ const slice = createSlice({
       state.isLoading = false
       state.isAuthenticated = true
     },
+    loginFail(state) {
+      state.isLoading = false
+      state.isAuthenticated = false
+    },
     registerSuccess(state) {
+      state.isLoading = false
+    },
+    registerFail(state) {
       state.isLoading = false
     },
     logoutSuccess(state) {
@@ -103,11 +110,19 @@ export function login({ email, password }: { email: string, password: string }) 
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/auth/login`, { email, password }, { withCredentials: true });
+      const response = await axios.post(`/auth/login`, { email, password }, {
+        withCredentials: true, validateStatus: () => true
+      });
       if (response.status !== 200) {
-        toast('Something went wrong', { type: "error" })
+        dispatch(slice.actions.loginFail())
+        if (response.status === 406) {
+          toast(response.data.message, { type: "error" })
+          return { status: 406 }
+        }
+        toast(response.data.message, { type: "error" })
         return { status: 500 }
       }
+
       toast('Login success', { type: "success" })
       setSession(response.data.token)
       dispatch(slice.actions.loginSuccess())
@@ -123,9 +138,16 @@ export function register({ email, password }: { email: string, password: string 
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`/auth/register`, { email, password });
+      const response = await axios.post(`/auth/register`, { email, password }, { validateStatus: () => true });
       if (response.status !== 200) {
-        toast('Something went wrong', { type: "error" })
+        dispatch(slice.actions.registerFail())
+
+        if (response.status === 406) {
+          toast(response.data.message, { type: "error" })
+          return { status: 406 }
+        }          toast(response.data.message, { type: "error" })
+
+        toast(response.data.message, { type: "error" })
         return { status: 500 }
       }
       toast('Account Created', { type: "success" })

@@ -1,4 +1,5 @@
 import { ActionCellRenderer } from '@/components/grid/ActionCellRenderer';
+import { ActiveCellRenderer } from '@/components/grid/ActiveCellRenderer';
 import { ColDef, ColGroupDef, ValueGetterParams } from 'ag-grid-community';
 
 
@@ -33,6 +34,7 @@ export const columndDefs: ColDef<any, any>[] = [
         field: "active",
         headerName: "Active",
         flex: 1,
+        cellRenderer: ActiveCellRenderer, 
     },
     {
         field: "totalTopicsSent",

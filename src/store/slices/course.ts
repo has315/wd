@@ -2,6 +2,7 @@ import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
 import axios from '@/lib/axios';
 import { Course } from '@/types/Course';
+import { toast } from 'react-toastify';
 
 // ----------------------------------------------------------------------
 
@@ -112,7 +113,7 @@ export function analzyeCourse({ notes, processingStyle }: { notes: any, processi
             totalTopics: response.data.totalTopics,
             totalLessons: response.data.totalLessons,
             entriesProccesed: response.data.entriesProccesed,
-            title: response.data.courseName, 
+            title: response.data.courseName,
             description: response.data.courseDescription
           }
         ),
@@ -140,6 +141,7 @@ export function createCourse({ course }: { course: any }) {
     }
   };
 }
+
 export function updateCourse({ course }: { course: any }) {
   console.log({ course })
   return async (dispatch: Dispatch) => {
@@ -152,6 +154,28 @@ export function updateCourse({ course }: { course: any }) {
           response.data[0]
         ),
       );
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function toggleCourseActive({ course }: { course: any }) {
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.put(`/api/course/`, { course },);
+      if (response.status !== 200) {
+        toast('Something went wrong', { type: "error" })
+        return { status: 500 }
+      }
+      dispatch(
+        slice.actions.updateCourse(
+          response.data[0]
+        ),
+      );
+      toast('Course ', { type: "success" })
       return response;
     } catch (error) {
       dispatch(slice.actions.hasError(error));

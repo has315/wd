@@ -1,6 +1,7 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit';
 // utils
 import axios from '@/lib/axios';
+import { RootState } from '../store';
 
 // ----------------------------------------------------------------------
 
@@ -66,13 +67,14 @@ export function updateProfile({ profile }: {
   profile: {
     email: string,
     phoneNumber: string,
-    id: number,
   }
 }) {
-  return async (dispatch: Dispatch) => {
+  return async (dispatch: Dispatch, getState: () => RootState) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/profile`, { ...profile });
+      const state = getState();
+      const id = state.profile.profile.id;
+      const response = await axios.put(`/api/profile`, { profile: { ...profile, id: id }, });
       dispatch(slice.actions.updateProfileSuccess({
         id: response.data[0].id,
         email: response.data[0].email,

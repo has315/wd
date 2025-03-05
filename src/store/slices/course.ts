@@ -143,7 +143,6 @@ export function createCourse({ course }: { course: any }) {
 }
 
 export function updateCourse({ course }: { course: any }) {
-  console.log({ course })
   return async (dispatch: Dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

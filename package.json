@@ -51,6 +51,7 @@
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.0.4",
     "embla-carousel-react": "^8.5.2",
+    "google-libphonenumber": "^3.2.40",
     "input-otp": "^1.4.2",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.469.0",
@@ -59,6 +60,7 @@
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.54.2",
+    "react-international-phone": "^4.5.0",
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^2.1.7",
     "react-router-dom": "^7.1.1",
@@ -73,6 +75,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/google-libphonenumber": "^7.4.30",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.10.3",
     "@types/react": "^18.3.18",

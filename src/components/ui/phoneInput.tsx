@@ -21,7 +21,7 @@ import {
   }
   
   export const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
-    value,
+    value = "",
     onChange,
   }) => {
     const {

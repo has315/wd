@@ -100,7 +100,7 @@ export default function ProfilePage() {
                 <FormLabel>Phone number</FormLabel>
                 <FormControl>
                   <PhoneInputField
-                    value={field.value}
+                    value={field.value || ""}
                     onChange={field.onChange}
                   />
                 </FormControl>

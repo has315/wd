@@ -151,7 +151,7 @@ export default function DashboardPage() {
   return (
     <>
       <Tabs
-        className="TabsRoot w-full"
+        className="TabsRoot w-full pt-2.5"
         defaultValue="tab1"
         value={tab}
         onValueChange={onTabChange}

@@ -65,7 +65,7 @@ export default function MainLayout() {
       </header>
 
       <main className="flex">
-        <section className="min-h-screen pl-10 flex flex-col bg-[#f3f3f3] w-[180px]">
+        <section className="min-h-screen pl-10 pt-2.5 flex flex-col bg-[#f3f3f3] w-[180px]">
           <NavigationMenu.Root orientation="vertical">
             <NavigationMenu.List>
               <NavigationMenu.Item>

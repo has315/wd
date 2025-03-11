@@ -59,5 +59,5 @@ export const columndDefs: ColDef<any, any>[] = [
         flex: 1,
     },
 
-    { field: "button", cellRenderer: ActionCellRenderer, flex: 1 },
+    { field: "Edit/Delete", cellRenderer: ActionCellRenderer, flex: 1 },
 ]

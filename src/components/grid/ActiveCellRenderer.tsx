@@ -1,4 +1,4 @@
-import { setDialogueOpen, setSelectedCourse, updateCourse } from "@/store/slices/course"
+import { updateCourse } from "@/store/slices/course"
 import { useDispatch } from "@/store/store"
 import type { ICellRendererParams } from "@ag-grid-community/core";
 import { FormControl } from "../ui/form";
@@ -11,7 +11,7 @@ export const ActiveCellRenderer = ({ value, data, ...props }: ICellRendererParam
     const handleOnChange = async () => {
         const result = await dispatch(updateCourse({ course: { ...data, active: !value } }))
         if (result?.status === 200) {
-            if(!value) {
+            if (!value) {
                 toast('Course activated', { type: "success" })
                 return
             }

@@ -1,7 +1,7 @@
 
 
 import { useEffect, useState } from 'react';
-import { getCourses, setDialogueOpen, updateCourse } from '@/store/slices/course';
+import { deleteCourse, getCourses, updateCourse } from '@/store/slices/course';
 import { useDispatch, useSelector } from '@/store/store';
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
 import { columndDefs } from '@/lib/gridDefinition';
@@ -18,6 +18,7 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { setDeleteDialogueOpen, setEditDialogueOpen } from '@/store/slices/modal';
 
 
 
@@ -57,7 +58,8 @@ type CourseFormValues = z.infer<typeof courseSchema>;
 
 export default function CoursesPage() {
   const dispatch = useDispatch()
-  const { courses, courseDialogueOpen, selectedCourse, isLoading } = useSelector(state => state.course)
+  const { courses, selectedCourse, isLoading } = useSelector(state => state.course)
+  const { editDialogueOpen, deleteDialogueOpen, } = useSelector(state => state.modal)
   const form = useForm<CourseFormValues>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
@@ -78,10 +80,23 @@ export default function CoursesPage() {
     const result = await dispatch(updateCourse({ course: { ...data, id: selectedCourse?.id } }))
 
     if (result?.status === 200) {
-      toast('Course updated', { type: "success" })
+      toast('Course deleted', { type: "success" })
       return
     }
-    toast('Course failed to update', { type: "error" })
+    toast('Course failed to delete', { type: "error" })
+  }
+
+  const onDelete = async (data: any) => {
+    console.log('deleting', data)
+    if (!selectedCourse) return
+    const result = await dispatch(deleteCourse({ course: selectedCourse }))
+
+    if (result?.status === 200) {
+      toast('Course deleted', { type: "success" })
+      dispatch(setDeleteDialogueOpen(false))
+      return
+    }
+    toast('Course failed to delete', { type: "error" })
   }
 
   useEffect(() => {
@@ -100,7 +115,7 @@ export default function CoursesPage() {
 
       <AgGridReact rowData={courses} columnDefs={columndDefs} />
 
-      <Dialog open={courseDialogueOpen} onOpenChange={() => dispatch(setDialogueOpen(false))}>
+      <Dialog open={editDialogueOpen} onOpenChange={() => dispatch(setEditDialogueOpen(false))}>
 
         <DialogPortal>
           <DialogOverlay />
@@ -241,6 +256,39 @@ export default function CoursesPage() {
 
 
       </Dialog>
+
+      <Dialog open={deleteDialogueOpen} onOpenChange={() => dispatch(setDeleteDialogueOpen(false))}>
+
+        <DialogPortal>
+
+          <DialogOverlay />
+          <DialogContent>
+            <DialogTitle>Delete course</DialogTitle>
+            <DialogDescription>Are you sure you want to delete this course?</DialogDescription>
+            <div className='flex gap-5'>
+              <Button
+                type='button'
+                className="w-full"
+                color='red'
+                variant={'outline'}
+                onClick={() => dispatch(setDeleteDialogueOpen(false))}
+              >
+                No
+              </Button>
+              <Button
+                className="w-full"
+                disabled={isLoading}
+                onClick={onDelete}
+              >
+                Yes
+              </Button>
+            </div>
+
+          </DialogContent>
+        </DialogPortal>
+      </Dialog>
+
+
     </div>
   );
 };

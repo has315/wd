@@ -12,7 +12,6 @@ type CourseState = {
   course: Course | null;
   selectedCourse: Course | null;
   courses: Course[];
-  courseDialogueOpen: boolean;
 }
 
 const initialState: CourseState = {
@@ -21,7 +20,6 @@ const initialState: CourseState = {
   course: null,
   selectedCourse: null,
   courses: [],
-  courseDialogueOpen: false
 };
 
 const slice = createSlice({
@@ -47,16 +45,17 @@ const slice = createSlice({
       state.isLoading = false;
       state.selectedCourse = action.payload;
     },
+    deleteCourse(state, action) {
+      state.isLoading = false;
+      state.selectedCourse = null;
+      state.courses = state.courses.filter(course => course.id !== action.payload.id)
+    },
 
     setCourse(state, action) {
       state.isLoading = false;
       state.course = action.payload;
     },
 
-    setDialogueOpen(state, action) {
-      state.isLoading = false;
-      state.courseDialogueOpen = action.payload;
-    },
 
     addCourse(state, action) {
       state.isLoading = false
@@ -77,7 +76,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { setSelectedCourse, setDialogueOpen } = slice.actions;
+export const { setSelectedCourse } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -150,6 +149,23 @@ export function updateCourse({ course }: { course: any }) {
       console.log(response.data)
       dispatch(
         slice.actions.updateCourse(
+          response.data[0]
+        ),
+      );
+      return response;
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function deleteCourse({ course }: { course: any }) {
+  return async (dispatch: Dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`/api/course/${course.id}`,);
+      console.log(response.data)
+      dispatch(
+        slice.actions.deleteCourse(
           response.data[0]
         ),
       );

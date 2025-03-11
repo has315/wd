@@ -6,6 +6,7 @@ import courseReducer from './slices/course'
 import noteReducer from './slices/note'
 import authReducer from './slices/auth'
 import profileReducer from './slices/profile'
+import modalReducer from './slices/modal'
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -36,7 +37,13 @@ export const notePersistConfig = {
 };
 
 export const profilePersistConfig = {
-  key: 'note',
+  key: 'profile',
+  storage,
+  keyPrefix: 'redux-',
+  whitelist: [],
+};
+export const modalPersistConfig = {
+  key: 'modal',
   storage,
   keyPrefix: 'redux-',
   whitelist: [],
@@ -47,6 +54,7 @@ const rootReducer = combineReducers({
   note: persistReducer(notePersistConfig, noteReducer),
   auth: persistReducer(authPersistConfig, authReducer),
   profile: persistReducer(profilePersistConfig, profileReducer),
+  modal: persistReducer(profilePersistConfig, modalReducer),
 });
 
 export default rootReducer;

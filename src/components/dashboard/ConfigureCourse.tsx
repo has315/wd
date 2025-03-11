@@ -194,7 +194,6 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                                 <SelectItem value="daily">Daily</SelectItem>
                                                 <SelectItem value="weekly">Weekly</SelectItem>
                                                 <SelectItem value="biweekly">Bi-weekly</SelectItem>
-                                                <SelectItem value="two_hours">DO NOT USE / 2h</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormDescription>

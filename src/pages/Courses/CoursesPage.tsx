@@ -39,7 +39,7 @@ const courseSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   delivery: z.object({
-    channel: z.enum(["email", "slack", "whatsapp"]),
+    channel: z.enum(["email", "slack", "whatsapp", "sms"]),
     frequency: z.enum(["daily", "weekly", "biweekly"]),
   }),
   active: z.boolean(),
@@ -156,8 +156,9 @@ export default function CoursesPage() {
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="email">Email</SelectItem>
-                            <SelectItem value="slack">Slack</SelectItem>
-                            <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                            <SelectItem value="sms">SMS/Text</SelectItem>
+                            <SelectItem value="slack" disabled>Slack</SelectItem>
+                            <SelectItem value="whatsapp" disabled>WhatsApp</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -203,7 +204,7 @@ export default function CoursesPage() {
                           Activate Course
                         </FormLabel>
                         <FormDescription>
-                        When active, this course will start delivering “Wisdom Drops based on your schedule
+                          When active, this course will start delivering “Wisdom Drops based on your schedule
                         </FormDescription>
                       </div>
                       <FormControl>

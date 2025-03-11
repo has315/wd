@@ -40,12 +40,13 @@ const courseSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   delivery: z.object({
-    channel: z.enum(["email", "slack", "whatsapp"]),
-    frequency: z.enum(["daily", "weekly", "biweekly"]),
+    channel: z.enum(["email", "slack", "whatsapp", "sms"]),
+    frequency: z.enum(["daily", "weekly", "biweekly", "two_hours"]),
   }),
   topics: z.array(topicSchema),
   totalLessons: z.number(),
-  totalTopics: z.number()
+  totalTopics: z.number(),
+  consent: z.boolean(),
 });
 
 type CourseFormValues = z.infer<typeof courseSchema>;
@@ -87,7 +88,8 @@ export default function DashboardPage() {
         channel: "email",
         frequency: "daily",
       },
-      topics: []
+      topics: [],
+      consent: false
     },
   });
 
@@ -95,6 +97,10 @@ export default function DashboardPage() {
 
 
   const onSubmit = async (data: any) => {
+    if(!data.consent) {
+      toast('Consent is required', { type: "error" })
+      return
+    }
     const result = await dispatch(createCourse({ course: {...data, processingStyle: processingStyle[0]} }))
 
     if (result?.status === 200) {
@@ -138,7 +144,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (course) {
-      form.reset({ ...course })
+      form.reset({ ...course, consent: false })
     }
   }, [course])
 
@@ -192,15 +198,12 @@ export default function DashboardPage() {
             <h2 className="text-2xl font-semibold mb-2">
               Create a New Wisdom Drop
             </h2>
-
-
             <DragDropUpload setTab={setTab} />
-
-
           </div>
         </TabsContent>
         <TabsContent className="TabsContent" value="tab2">
           <ConfigureAnalysis form={form} handleAnalyze={handleAnalyze} loading={courseLoading} processingStyle={processingStyle} setProcessingStyle={setProcessingStyle} note={note} />
+
           <Button className="mt-4" onClick={() => setTab("tab1")} disabled={courseLoading}>
             <ChevronLeft />
             Back
@@ -208,6 +211,7 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent className="TabsContent" value="tab3">
           <ConfigureCourse course={course} form={form} isLoading={courseLoading} onSubmit={onSubmit} />
+
           <Button className="mt-4" onClick={() => setTab("tab2")} disabled={courseLoading}>
             <ChevronLeft />
             Back

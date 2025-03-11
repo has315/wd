@@ -161,8 +161,9 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                             </FormControl>
                                             <SelectContent>
                                                 <SelectItem value="email">Email</SelectItem>
-                                                <SelectItem value="slack">Slack</SelectItem>
-                                                <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                                                <SelectItem value="sms">SMS/Text</SelectItem>
+                                                <SelectItem value="slack" disabled>Slack</SelectItem>
+                                                <SelectItem value="whatsapp" disabled>WhatsApp</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormDescription>
@@ -193,12 +194,40 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                                 <SelectItem value="daily">Daily</SelectItem>
                                                 <SelectItem value="weekly">Weekly</SelectItem>
                                                 <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                                                <SelectItem value="two_hours">DO NOT USE / 2h</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormDescription>
                                             How often do you want to receive your Wisdom Drops (always at 8:30 am CET)
                                         </FormDescription>
                                         <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="consent"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="flex flex-col gap-3">
+
+                                            <FormLabel>Consent to Receive Marketing Communications</FormLabel>
+                                            <Checkbox
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange} />
+                                            <FormDescription>
+                                                <p>
+
+                                                    By checking this box, you consent to receive text messages from Wisdom Drop at the phone number you provided.
+                                                </p>
+                                                <p>
+
+                                                    You can reply STOP at any time if you wish to stop receiving these messages.
+                                                </p>
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </div>
                                     </FormItem>
                                 )}
                             />

@@ -163,7 +163,7 @@ export const ConfigureCourse = ({ form, course, onSubmit, isLoading }: { form: a
                                                 <SelectItem value="email">Email</SelectItem>
                                                 <SelectItem value="sms">SMS/Text</SelectItem>
                                                 <SelectItem value="slack" disabled>Slack</SelectItem>
-                                                <SelectItem value="whatsapp" disabled>WhatsApp</SelectItem>
+                                                <SelectItem value="whatsapp">WhatsApp</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormDescription>
